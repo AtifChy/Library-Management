@@ -12,6 +12,7 @@ public class Account {
     private String password;
     private String gender;
     private File file;
+    private LoginFrame loginFrame;
 
     public Account(JFrame parentComponent, String userType, String name, String password) {
         this.parentComponent = parentComponent;
@@ -98,20 +99,22 @@ public class Account {
                 "Registration Time: " + registrationTime + "\n" +
                 "===============================================\n";
 
-        if (userType.equals("librarian")) {
-            file = new File("src/data/librarian.txt");
-        } else if (userType.equals("student")) {
-            file = new File("src/data/student.txt");
-        }
-
-        File parentDir = file.getParentFile();
-        if (!parentDir.exists()) {
-            parentDir.mkdirs();
-        }
-
         try {
+            if (userType.equals("librarian")) {
+                file = new File("src/data/librarian.txt");
+            } else if (userType.equals("student")) {
+                file = new File("src/data/student.txt");
+            }
+
+            File parentDir = file.getParentFile();
+            if (!parentDir.exists()) {
+                parentDir.mkdirs();
+                file.createNewFile();
+            }
+
             BufferedWriter writer = new BufferedWriter(new FileWriter(file, true));
             writer.write(userInfo);
+            writer.flush();
             writer.close();
 
             JOptionPane.showMessageDialog(
@@ -120,6 +123,13 @@ public class Account {
                     "Success",
                     JOptionPane.INFORMATION_MESSAGE
             );
+
+            if (loginFrame == null) {
+                loginFrame = new LoginFrame();
+            }
+            loginFrame.setVisible(true);
+            parentComponent.setVisible(false);
+
         } catch (IOException e) {
             JOptionPane.showMessageDialog(
                     parentComponent,

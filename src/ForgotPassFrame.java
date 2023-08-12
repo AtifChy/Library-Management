@@ -29,7 +29,7 @@ public class ForgotPassFrame extends JFrame implements MouseListener {
     private final Font bigFont = Utils.BIG_FONT;
 
     public ForgotPassFrame() {
-        super("Forgot Password");
+        super("Reset Password");
         Image iconImage = Toolkit.getDefaultToolkit().getImage("src/images/library.png");
         this.setIconImage(iconImage);
         this.setSize(1260, 700);

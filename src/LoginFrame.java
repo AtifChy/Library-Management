@@ -1,5 +1,4 @@
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.basic.BasicButtonUI;
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -185,7 +184,7 @@ public class LoginFrame extends JFrame implements MouseListener {
 
         buttonPanel = new JPanel();
         buttonPanel.setLayout(new GridLayout(1, 1));
-        buttonPanel.setBorder(new EmptyBorder(45, 0, 35, 0));
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(45, 0, 35, 0));
         buttonPanel.setPreferredSize(new Dimension(420, 140));
         buttonPanel.setBackground(backgroundColor);
 

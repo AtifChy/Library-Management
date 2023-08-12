@@ -1,12 +1,10 @@
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.basic.BasicButtonUI;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Random;
 
 public class SignupFrame extends JFrame implements MouseListener {
@@ -94,7 +92,7 @@ public class SignupFrame extends JFrame implements MouseListener {
         // Start of Right Panel
         rightPanel = new JPanel();
         rightPanel.setLayout(new FlowLayout());
-        rightPanel.setBorder(new EmptyBorder(0, 20, 0, 0));
+        rightPanel.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 0));
         rightPanel.setPreferredSize(new Dimension(600, 800));
         rightPanel.setBackground(backgroundColor);
 
@@ -259,7 +257,7 @@ public class SignupFrame extends JFrame implements MouseListener {
 
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new GridLayout(1, 1));
-        buttonPanel.setBorder(new EmptyBorder(20, 0, 10, 0));
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(20, 0, 10, 0));
         buttonPanel.setPreferredSize(new Dimension(420, 80));
         buttonPanel.setBackground(backgroundColor);
 
@@ -325,7 +323,9 @@ public class SignupFrame extends JFrame implements MouseListener {
                         "Incomplete Warning",
                         JOptionPane.WARNING_MESSAGE
                 );
-            } else if (!Arrays.toString(passField.getPassword()).equals(Arrays.toString(confirmPassField.getPassword()))) {
+            } else if (!String.valueOf(passField.getPassword()).equals(
+                    String.valueOf(confirmPassField.getPassword())
+            )) {
                 JOptionPane.showMessageDialog(
                         this,
                         "Passwords do not match. Please, try again.",
