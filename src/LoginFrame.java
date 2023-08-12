@@ -1,4 +1,3 @@
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.basic.BasicButtonUI;
@@ -7,17 +6,16 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.Arrays;
 
 public class LoginFrame extends JFrame implements MouseListener {
     private final JPanel loginPanel;
     private final JPanel imagePanel;
-    private JPanel introPanel;
+    private final JPanel introPanel;
     private final JLabel introLabel;
-    private JPanel radioPanel;
-    private ButtonGroup loginGroup;
-    private JRadioButton librarianButton;
-    private JRadioButton studentButton;
+    private final JPanel radioPanel;
+    private final ButtonGroup loginGroup;
+    private final JRadioButton librarianButton;
+    private final JRadioButton studentButton;
     private final JLabel nameLabel;
     private final JLabel passLabel;
     private final JTextField nameField;
@@ -28,22 +26,27 @@ public class LoginFrame extends JFrame implements MouseListener {
     private final JButton forgotButton;
     private final JPanel buttonPanel;
     private final JButton loginButton;
+    private final JLabel signupLabel;
     private final JButton signupButton;
-    private JPanel naviPanel;
-    private JButton backButton;
-    private final Color backgroundColor;
+    private final JPanel naviPanel;
+    private final JButton backButton;
+    private final Color backgroundColor = Utils.BACKGROUND_COLOR;
     private final ImageIcon showIcon;
     private final ImageIcon hideIcon;
-    private final Font introFont;
-    private final Font normalFont;
-    private final Font smallFont;
-    private final Font smallBoldFont;
+    private final Font introFont = Utils.INTRO_FONT;
+    private final Font normalFont = Utils.NORMAL_FONT;
+    private final Font normalBoldFont = Utils.NORMAL_BOLD_FONT;
 
-    private final Font bigFont;
+    private final Font smallFont = Utils.SMALL_FONT;
+    private final Font smallBoldFont = Utils.SMALL_BOLD_FONT;
+
+    private final Font bigFont = Utils.BIG_FONT;
+    private final Font bigBoldFont = Utils.BIG_BOLD_FONT;
     private final BufferedImage resizedImage;
     private SignupFrame signupFrame;
+    private ForgotPassFrame forgotPassFrame;
 
-    public LoginFrame() throws IOException {
+    public LoginFrame() {
         super("LogIn");
         Image iconImage = Toolkit.getDefaultToolkit().getImage("src/images/library.png");
         this.setIconImage(iconImage);
@@ -53,12 +56,8 @@ public class LoginFrame extends JFrame implements MouseListener {
         this.setResizable(false);
         this.setLayout(new BorderLayout());
 
-        backgroundColor = new Color(220, 220, 225);
-        introFont = new Font("Century Gothic", Font.BOLD, 25);
-        normalFont = new Font("Inter", Font.PLAIN, 16);
-        smallFont = new Font("Inter", Font.PLAIN, 14);
-        smallBoldFont = new Font("Inter", Font.BOLD, 14);
-        bigFont = new Font("Inter", Font.PLAIN, 18);
+        UIManager.put("OptionPane.messageFont", normalFont);
+        UIManager.put("OptionPane.buttonFont", normalFont);
 
         loginPanel = new JPanel();
         loginPanel.setPreferredSize(new Dimension(560, 700));
@@ -82,15 +81,19 @@ public class LoginFrame extends JFrame implements MouseListener {
         ImageIcon checkedIcon = new ImageIcon("src/images/radio_checked.png");
         ImageIcon unCheckedIcon = new ImageIcon("src/images/radio_unchecked.png");
         librarianButton = new JRadioButton("Librarian", unCheckedIcon);
+        librarianButton.setActionCommand("librarian");
         librarianButton.setSelectedIcon(checkedIcon);
         librarianButton.setFont(smallBoldFont);
         librarianButton.setBackground(backgroundColor);
         librarianButton.setFocusable(false);
+        librarianButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         studentButton = new JRadioButton("Student", unCheckedIcon);
+        studentButton.setActionCommand("student");
         studentButton.setSelectedIcon(checkedIcon);
         studentButton.setFont(smallBoldFont);
         studentButton.setBackground(backgroundColor);
         studentButton.setFocusable(false);
+        studentButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
         loginGroup = new ButtonGroup();
         loginGroup.add(librarianButton);
@@ -109,7 +112,10 @@ public class LoginFrame extends JFrame implements MouseListener {
         nameField.setPreferredSize(new Dimension(420, 56));
         nameField.setFont(bigFont);
         nameField.setToolTipText("Enter your user name");
-        nameField.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.BLACK));
+        nameField.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createMatteBorder(0, 0, 1, 0, Color.BLACK),
+                BorderFactory.createEmptyBorder(0, 5, 0, 0)
+        ));
         nameField.setBackground(backgroundColor);
         loginPanel.add(nameField);
 
@@ -122,7 +128,10 @@ public class LoginFrame extends JFrame implements MouseListener {
         passField.setPreferredSize(new Dimension(390, 56));
         passField.setFont(bigFont);
         passField.setToolTipText("Enter your password");
-        passField.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.BLACK));
+        passField.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createMatteBorder(0, 0, 1, 0, Color.BLACK),
+                BorderFactory.createEmptyBorder(0, 5, 0, 0)
+        ));
         passField.setBackground(backgroundColor);
         loginPanel.add(passField);
 
@@ -161,7 +170,7 @@ public class LoginFrame extends JFrame implements MouseListener {
         forgotButton.setBorderPainted(false);
         forgotButton.setFocusable(false);
         forgotButton.setBackground(backgroundColor);
-        forgotButton.setForeground(Color.BLUE);
+        forgotButton.setForeground(new Color(0, 125, 255));
         forgotButton.setMargin(new Insets(0, 0, 0, 0));
         forgotButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         forgotButton.setUI(new BasicButtonUI() {
@@ -175,22 +184,27 @@ public class LoginFrame extends JFrame implements MouseListener {
         loginPanel.add(rememberPanel);
 
         buttonPanel = new JPanel();
-        buttonPanel.setLayout(new GridLayout(1, 2));
+        buttonPanel.setLayout(new GridLayout(1, 1));
         buttonPanel.setBorder(new EmptyBorder(45, 0, 35, 0));
         buttonPanel.setPreferredSize(new Dimension(420, 140));
         buttonPanel.setBackground(backgroundColor);
 
         loginButton = new JButton("Log in");
-        loginButton.setFont(bigFont);
+        loginButton.setFont(bigBoldFont);
         loginButton.setFocusable(false);
         loginButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         loginButton.addMouseListener(this);
         buttonPanel.add(loginButton);
         loginPanel.add(buttonPanel);
 
-        signupButton = new JButton("Don't have an account yet? Sign up");
-        signupButton.setPreferredSize(new Dimension(420, 50));
-        signupButton.setFont(normalFont);
+        signupLabel = new JLabel("Don't have an account yet?");
+        signupLabel.setPreferredSize(new Dimension(210, 50));
+        signupLabel.setFont(normalFont);
+        loginPanel.add(signupLabel);
+
+        signupButton = new JButton("Sign up");
+        signupButton.setPreferredSize(new Dimension(70, 50));
+        signupButton.setFont(normalBoldFont);
         signupButton.setBorderPainted(false);
         signupButton.setFocusable(false);
         signupButton.setBackground(backgroundColor);
@@ -202,7 +216,7 @@ public class LoginFrame extends JFrame implements MouseListener {
                 return backgroundColor;
             }
         });
-        loginPanel.add(signupButton, BorderLayout.SOUTH);
+        loginPanel.add(signupButton);
 
         imagePanel = new JPanel();
         imagePanel.setPreferredSize(new Dimension(700, 700));
@@ -225,7 +239,11 @@ public class LoginFrame extends JFrame implements MouseListener {
         naviPanel.add(backButton, BorderLayout.WEST);
         imagePanel.add(naviPanel);
 
-        resizedImage = Utils.resizeImage("src/images/login.jpg", 450, 450);
+        try {
+            resizedImage = Utils.resizeImage("src/images/login.jpg", 450, 450);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         ImageIcon image = new ImageIcon(resizedImage);
         JLabel imageLabel = new JLabel(image);
         imageLabel.setBorder(BorderFactory.createEmptyBorder(25, 0, 0, 20));
@@ -248,39 +266,36 @@ public class LoginFrame extends JFrame implements MouseListener {
                 showHideButton.setIcon(showIcon);
             }
         } else if (e.getSource() == forgotButton) {
-
+            forgotPassFrame = new ForgotPassFrame();
+            this.setVisible(false);
+            forgotPassFrame.setVisible(true);
         } else if (e.getSource() == loginButton) {
             if (!librarianButton.isSelected() && !studentButton.isSelected()) {
-                JLabel errorLabel = new JLabel("Please select either `Librarian` or `Student`.");
-                errorLabel.setFont(normalFont);
                 JOptionPane.showMessageDialog(
                         this,
-                        errorLabel,
+                        "Please select either 'Librarian' or 'Student'.",
                         "Login Error",
                         JOptionPane.ERROR_MESSAGE
                 );
+            } else if (nameField.getText().isEmpty() || passField.getPassword().length == 0) {
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Please, Fill the black areas.",
+                        "Warning",
+                        JOptionPane.WARNING_MESSAGE
+                );
             } else {
+                String userType = loginGroup.getSelection().getActionCommand();
                 String name = nameField.getText();
-                String password = Arrays.toString(passField.getPassword());
-                if (name.isEmpty() || password.isEmpty()) {
-                    JLabel warningLabel = new JLabel("Please enter your name and password.");
-                    warningLabel.setFont(normalFont);
-                    JOptionPane.showMessageDialog(
-                            this,
-                            warningLabel,
-                            "Warning",
-                            JOptionPane.WARNING_MESSAGE
-                    );
-                }
+                String password = String.valueOf(passField.getPassword());
+
+                Account account = new Account(this, userType, name, password);
+                account.checkAccount();
             }
         } else if (e.getSource() == signupButton) {
-            try {
-                signupFrame = new SignupFrame();
-                this.setVisible(false);
-                signupFrame.setVisible(true);
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
+            signupFrame = new SignupFrame();
+            this.setVisible(false);
+            signupFrame.setVisible(true);
         }
     }
 
@@ -299,7 +314,7 @@ public class LoginFrame extends JFrame implements MouseListener {
         if (e.getSource() == forgotButton) {
             forgotButton.setForeground(Color.RED);
         } else if (e.getSource() == signupButton) {
-            signupButton.setForeground(Color.BLUE);
+            signupButton.setForeground(new Color(0, 125, 255));
         } else if (e.getSource() == backButton) {
             backButton.setBackground(Color.LIGHT_GRAY);
         }
@@ -308,7 +323,7 @@ public class LoginFrame extends JFrame implements MouseListener {
     @Override
     public void mouseExited(MouseEvent e) {
         if (e.getSource() == forgotButton) {
-            forgotButton.setForeground(Color.BLUE);
+            forgotButton.setForeground(new Color(0, 125, 255));
         } else if (e.getSource() == signupButton) {
             signupButton.setForeground(Color.BLACK);
         } else if (e.getSource() == backButton) {

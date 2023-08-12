@@ -5,6 +5,15 @@ import java.io.File;
 import java.io.IOException;
 
 public class Utils {
+    public static Font INTRO_FONT = new Font("Century Gothic", Font.BOLD, 25);
+    public static Font NORMAL_FONT = new Font("Inter", Font.PLAIN, 16);
+    public static Font NORMAL_BOLD_FONT = new Font("Inter", Font.BOLD, 16);
+    public static Font SMALL_FONT = new Font("Inter", Font.PLAIN, 14);
+    public static Font SMALL_BOLD_FONT = new Font("Inter", Font.BOLD, 14);
+    public static Font BIG_FONT = new Font("Inter", Font.PLAIN, 18);
+    public static Font BIG_BOLD_FONT = new Font("Inter", Font.BOLD, 18);
+    public static Color BACKGROUND_COLOR = new Color(220, 220, 225);
+
     public static BufferedImage resizeImage(String filename, int width, int height) throws IOException {
         BufferedImage rawImage = ImageIO.read(new File(filename));
         BufferedImage resizedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
