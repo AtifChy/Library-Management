@@ -3,6 +3,7 @@ package Frame;
 import Extra.Utils;
 import Frame.Panel.BorrowTab;
 import Frame.Panel.HomeTab;
+import Frame.Panel.ProfileTab;
 import Frame.Panel.ReturnTab;
 
 import javax.swing.*;
@@ -23,6 +24,7 @@ public class StudentFrame extends JFrame implements ActionListener, MouseListene
     private HomeTab homeTab;
     private BorrowTab borrowTab;
     private ReturnTab returnTab;
+    private ProfileTab profileTab;
     private LoginFrame loginFrame;
 
     public StudentFrame(String name, String userType) {
@@ -80,7 +82,7 @@ public class StudentFrame extends JFrame implements ActionListener, MouseListene
         tabPanel.add(homeButton);
         tabPanel.add(borrowButton);
         tabPanel.add(returnButton);
-        tabPanel.add(profileButton);
+        // tabPanel.add(profileButton);
         tabPanel.add(logoutButton);
 
         leftPanel.add(titleLabel, BorderLayout.NORTH);
@@ -94,7 +96,7 @@ public class StudentFrame extends JFrame implements ActionListener, MouseListene
 
         borrowTab = new BorrowTab(name);
         returnTab = new ReturnTab(name);
-        JPanel profileTab = new JPanel();
+        profileTab = new ProfileTab();
         JPanel logoutTab = new JPanel();
         homeTab = new HomeTab(borrowTab, returnTab, name, userType);
 
@@ -152,12 +154,30 @@ public class StudentFrame extends JFrame implements ActionListener, MouseListene
         } else if (e.getSource() == profileButton) {
             tabbedPane.setSelectedIndex(3);
         } else if (e.getSource() == logoutButton) {
-            tabbedPane.setSelectedIndex(4);
-            if (loginFrame == null) {
-                loginFrame = new LoginFrame();
+            int answer = JOptionPane.showConfirmDialog(
+                    this,
+                    "Are you sure you want to log out?",
+                    "Log Out Confirmation",
+                    JOptionPane.YES_NO_OPTION
+            );
+
+            if (answer == JOptionPane.YES_OPTION) {
+                tabbedPane.setSelectedIndex(4);
+                if (loginFrame == null) {
+                    loginFrame = new LoginFrame();
+                }
+                loginFrame.setVisible(true);
+                this.dispose();
+            } else {
+                tabbedPane.setSelectedIndex(0);
+                homeButton.setBorder(BorderFactory.createCompoundBorder(
+                        BorderFactory.createMatteBorder(0, 5, 0, 0, Utils.BLUE),
+                        BorderFactory.createEmptyBorder(0, 0, 0, 0)
+                ));
+                homeButton.setBackground(Utils.LIGHT_BLUE);
+                logoutButton.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+                logoutButton.setBackground(Utils.LIGHTER_BLUE);
             }
-            loginFrame.setVisible(true);
-            this.dispose();
         }
     }
 
