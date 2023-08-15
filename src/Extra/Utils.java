@@ -1,3 +1,5 @@
+package Extra;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -12,7 +14,11 @@ public class Utils {
     public static Font SMALL_BOLD_FONT = new Font("Inter", Font.BOLD, 14);
     public static Font BIG_FONT = new Font("Inter", Font.PLAIN, 18);
     public static Font BIG_BOLD_FONT = new Font("Inter", Font.BOLD, 18);
+    public static Font HUGE_FONT = new Font("Inter", Font.PLAIN, 70);
     public static Color BACKGROUND_COLOR = new Color(220, 220, 225);
+    public static Color LIGHTER_BLUE = new Color(208, 228, 255);
+    public static Color LIGHT_BLUE = new Color(165, 200, 254);
+    public static Color BLUE = new Color(0, 125, 255);
 
     public static BufferedImage resizeImage(String filename, int width, int height) throws IOException {
         BufferedImage rawImage = ImageIO.read(new File(filename));

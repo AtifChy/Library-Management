@@ -1,3 +1,7 @@
+package Extra;
+
+import Frame.LoginFrame;
+
 import javax.swing.*;
 import java.io.*;
 import java.time.LocalDateTime;
@@ -12,6 +16,7 @@ public class Account {
     private String password;
     private String gender;
     private File file;
+    private BufferedReader reader;
     private LoginFrame loginFrame;
 
     public Account(JFrame parentComponent, String userType, String name, String password) {
@@ -119,7 +124,7 @@ public class Account {
 
             JOptionPane.showMessageDialog(
                     parentComponent,
-                    " Account creation successful. Now you can try logging in.",
+                    " Extra.Account creation successful. Now you can try logging in.",
                     "Success",
                     JOptionPane.INFORMATION_MESSAGE
             );
@@ -133,7 +138,7 @@ public class Account {
         } catch (IOException e) {
             JOptionPane.showMessageDialog(
                     parentComponent,
-                    "Account creation failed.",
+                    "Extra.Account creation failed.",
                     "Failed",
                     JOptionPane.ERROR_MESSAGE
             );
@@ -141,18 +146,61 @@ public class Account {
         }
     }
 
-    public void checkAccount() {
+    public boolean accountExists(String name, String id) {
+        try {
+            if (userType.equals("librarian")) {
+                file = new File("src/data/librarian.txt");
+            } else if (userType.equals("student")) {
+                file = new File("src/data/student.txt");
+            }
+
+            File parentDir = file.getParentFile();
+            if (!parentDir.exists()) {
+                parentDir.mkdirs();
+                file.createNewFile();
+            }
+
+            reader = new BufferedReader(new FileReader(file));
+            String line;
+            String foundName = null;
+            String foundID = null;
+            while ((line = reader.readLine()) != null) {
+                if (line.contains("Name: ")) {
+                    foundName = line.replace("Name: ", "");
+                } else if (line.contains("ID: ")) {
+                    foundID = line.replace("ID: ", "");
+                }
+
+                if (foundName != null && foundID != null) {
+                    if (foundName.equals(name) && foundID.equals(id)) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(
+                    parentComponent,
+                    "Error while checking account.",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            throw new RuntimeException(e);
+        }
+    }
+
+    public boolean loginAccount() {
         if (userType.equals("librarian")) {
             file = new File("src/data/librarian.txt");
         } else if (userType.equals("student")) {
             file = new File("src/data/student.txt");
         }
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+        try {
+            reader = new BufferedReader(new FileReader(file));
             String line;
             String foundName = null;
             String foundPassword = null;
-            boolean isFound = false;
             while ((line = reader.readLine()) != null) {
                 if (line.contains("Name: ")) {
                     foundName = line.replace("Name: ", "");
@@ -168,19 +216,16 @@ public class Account {
                                 "Success",
                                 JOptionPane.INFORMATION_MESSAGE
                         );
-                        isFound = true;
-                        break;
+                        return true;
                     }
                 }
             }
-            if (!isFound) {
-                JOptionPane.showMessageDialog(
-                        parentComponent,
-                        "Login failed.",
-                        "Fail",
-                        JOptionPane.ERROR_MESSAGE
-                );
-            }
+            JOptionPane.showMessageDialog(
+                    parentComponent,
+                    "Login failed.",
+                    "Fail",
+                    JOptionPane.ERROR_MESSAGE
+            );
         } catch (IOException e) {
             JOptionPane.showMessageDialog(
                     parentComponent,
@@ -190,5 +235,6 @@ public class Account {
             );
             throw new RuntimeException(e);
         }
+        return false;
     }
 }

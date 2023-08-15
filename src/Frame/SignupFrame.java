@@ -1,3 +1,7 @@
+package Frame;
+
+import Extra.*;
+
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicButtonUI;
 import java.awt.*;
@@ -236,7 +240,7 @@ public class SignupFrame extends JFrame implements MouseListener {
         captchaValue = num1 + num2;
 
         JPanel theCaptchaPanel = new JPanel();
-        theCaptchaPanel.setBackground(new Color(165, 200, 254));
+        theCaptchaPanel.setBackground(Utils.LIGHT_BLUE);
         theCaptchaPanel.setPreferredSize(new Dimension(80, 40));
         theCaptchaPanel.setBorder(BorderFactory.createEmptyBorder(3, 0, 0, 0));
         JLabel theCaptcha = new JLabel(num1 + " + " + num2);
@@ -357,7 +361,16 @@ public class SignupFrame extends JFrame implements MouseListener {
                 String gender = (String) genderBox.getSelectedItem();
 
                 Account account = new Account(this, userType, id, name, mail, password, gender);
-                account.addAccount();
+                if (!account.accountExists(name, id)) {
+                    account.addAccount();
+                } else {
+                    JOptionPane.showMessageDialog(
+                            this,
+                            "Account with same Name & id already exists.",
+                            "Warning",
+                            JOptionPane.WARNING_MESSAGE
+                    );
+                }
             }
         } else if (e.getSource() == loginButton) {
             if (loginFrame == null) {
@@ -383,7 +396,7 @@ public class SignupFrame extends JFrame implements MouseListener {
         if (e.getSource() == backButton) {
             backButton.setBackground(Color.LIGHT_GRAY);
         } else if (e.getSource() == loginButton) {
-            loginButton.setForeground(new Color(0, 125, 255));
+            loginButton.setForeground(Utils.BLUE);
         }
     }
 

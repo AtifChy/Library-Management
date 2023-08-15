@@ -1,3 +1,8 @@
+package Frame;
+
+import Extra.*;
+import jdk.jshell.execution.Util;
+
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicButtonUI;
 import java.awt.*;
@@ -5,6 +10,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+
 
 public class LoginFrame extends JFrame implements MouseListener {
     private final JPanel loginPanel;
@@ -29,7 +35,6 @@ public class LoginFrame extends JFrame implements MouseListener {
     private final JButton signupButton;
     private final JPanel naviPanel;
     private final JButton backButton;
-    private final Color backgroundColor = Utils.BACKGROUND_COLOR;
     private final ImageIcon showIcon;
     private final ImageIcon hideIcon;
     private final Font introFont = Utils.INTRO_FONT;
@@ -60,12 +65,12 @@ public class LoginFrame extends JFrame implements MouseListener {
 
         loginPanel = new JPanel();
         loginPanel.setPreferredSize(new Dimension(560, 700));
-        loginPanel.setBackground(backgroundColor);
+        loginPanel.setBackground(Utils.BACKGROUND_COLOR);
 
         introPanel = new JPanel();
         introPanel.setPreferredSize(new Dimension(560, 130));
         introPanel.setBorder(BorderFactory.createEmptyBorder(60, 0, 20, 0));
-        introPanel.setBackground(backgroundColor);
+        introPanel.setBackground(Utils.BACKGROUND_COLOR);
 
         introLabel = new JLabel("Welcome");
         introLabel.setFont(introFont);
@@ -75,7 +80,7 @@ public class LoginFrame extends JFrame implements MouseListener {
         radioPanel = new JPanel();
         radioPanel.setLayout(new BorderLayout());
         radioPanel.setPreferredSize(new Dimension(200, 30));
-        radioPanel.setBackground(backgroundColor);
+        radioPanel.setBackground(Utils.BACKGROUND_COLOR);
 
         ImageIcon checkedIcon = new ImageIcon("src/images/radio_checked.png");
         ImageIcon unCheckedIcon = new ImageIcon("src/images/radio_unchecked.png");
@@ -83,20 +88,21 @@ public class LoginFrame extends JFrame implements MouseListener {
         librarianButton.setActionCommand("librarian");
         librarianButton.setSelectedIcon(checkedIcon);
         librarianButton.setFont(smallBoldFont);
-        librarianButton.setBackground(backgroundColor);
+        librarianButton.setBackground(Utils.BACKGROUND_COLOR);
         librarianButton.setFocusable(false);
         librarianButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         studentButton = new JRadioButton("Student", unCheckedIcon);
         studentButton.setActionCommand("student");
         studentButton.setSelectedIcon(checkedIcon);
         studentButton.setFont(smallBoldFont);
-        studentButton.setBackground(backgroundColor);
+        studentButton.setBackground(Utils.BACKGROUND_COLOR);
         studentButton.setFocusable(false);
         studentButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
         loginGroup = new ButtonGroup();
         loginGroup.add(librarianButton);
         loginGroup.add(studentButton);
+        loginGroup.setSelected(studentButton.getModel(), true);
 
         radioPanel.add(librarianButton, BorderLayout.WEST);
         radioPanel.add(studentButton, BorderLayout.EAST);
@@ -115,7 +121,7 @@ public class LoginFrame extends JFrame implements MouseListener {
                 BorderFactory.createMatteBorder(0, 0, 1, 0, Color.BLACK),
                 BorderFactory.createEmptyBorder(0, 5, 0, 0)
         ));
-        nameField.setBackground(backgroundColor);
+        nameField.setBackground(Utils.BACKGROUND_COLOR);
         loginPanel.add(nameField);
 
         passLabel = new JLabel("Password");
@@ -131,7 +137,7 @@ public class LoginFrame extends JFrame implements MouseListener {
                 BorderFactory.createMatteBorder(0, 0, 1, 0, Color.BLACK),
                 BorderFactory.createEmptyBorder(0, 5, 0, 0)
         ));
-        passField.setBackground(backgroundColor);
+        passField.setBackground(Utils.BACKGROUND_COLOR);
         loginPanel.add(passField);
 
         showIcon = new ImageIcon("src/images/show.png");
@@ -139,12 +145,12 @@ public class LoginFrame extends JFrame implements MouseListener {
         showHideButton = new JToggleButton(showIcon);
         showHideButton.setPreferredSize(new Dimension(25, 56));
         showHideButton.setFocusable(false);
-        showHideButton.setBackground(backgroundColor);
+        showHideButton.setBackground(Utils.BACKGROUND_COLOR);
         showHideButton.setBorderPainted(false);
         showHideButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         showHideButton.setUI(new BasicButtonUI() {
             private Color getSelectColor() {
-                return backgroundColor;
+                return Utils.BACKGROUND_COLOR;
             }
         });
         showHideButton.addMouseListener(this);
@@ -153,14 +159,14 @@ public class LoginFrame extends JFrame implements MouseListener {
         rememberPanel = new JPanel();
         rememberPanel.setLayout(new BorderLayout());
         rememberPanel.setPreferredSize(new Dimension(420, 40));
-        rememberPanel.setBackground(backgroundColor);
+        rememberPanel.setBackground(Utils.BACKGROUND_COLOR);
 
         rememberBox = new JCheckBox("Remember me");
         rememberBox.setFocusable(false);
         rememberBox.setIcon(new ImageIcon("src/images/checkbox_blank.png"));
         rememberBox.setSelectedIcon(new ImageIcon("src/images/checkbox_selected.png"));
         rememberBox.setFont(smallFont);
-        rememberBox.setBackground(backgroundColor);
+        rememberBox.setBackground(Utils.BACKGROUND_COLOR);
         rememberBox.setCursor(new Cursor(Cursor.HAND_CURSOR));
         rememberPanel.add(rememberBox, BorderLayout.WEST);
 
@@ -168,13 +174,13 @@ public class LoginFrame extends JFrame implements MouseListener {
         forgotButton.setFont(smallFont);
         forgotButton.setBorderPainted(false);
         forgotButton.setFocusable(false);
-        forgotButton.setBackground(backgroundColor);
-        forgotButton.setForeground(new Color(0, 125, 255));
+        forgotButton.setBackground(Utils.BACKGROUND_COLOR);
+        forgotButton.setForeground(Utils.BLUE);
         forgotButton.setMargin(new Insets(0, 0, 0, 0));
         forgotButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         forgotButton.setUI(new BasicButtonUI() {
             private Color getSelectColor() {
-                return backgroundColor;
+                return Utils.BACKGROUND_COLOR;
             }
         });
         forgotButton.addMouseListener(this);
@@ -186,7 +192,7 @@ public class LoginFrame extends JFrame implements MouseListener {
         buttonPanel.setLayout(new GridLayout(1, 1));
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(45, 0, 35, 0));
         buttonPanel.setPreferredSize(new Dimension(420, 140));
-        buttonPanel.setBackground(backgroundColor);
+        buttonPanel.setBackground(Utils.BACKGROUND_COLOR);
 
         loginButton = new JButton("Log in");
         loginButton.setFont(bigBoldFont);
@@ -206,13 +212,13 @@ public class LoginFrame extends JFrame implements MouseListener {
         signupButton.setFont(normalBoldFont);
         signupButton.setBorderPainted(false);
         signupButton.setFocusable(false);
-        signupButton.setBackground(backgroundColor);
+        signupButton.setBackground(Utils.BACKGROUND_COLOR);
         signupButton.setMargin(new Insets(0, 0, 0, 0));
         signupButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         signupButton.addMouseListener(this);
         signupButton.setUI(new BasicButtonUI() {
             private Color getSelectColor() {
-                return backgroundColor;
+                return Utils.BACKGROUND_COLOR;
             }
         });
         loginPanel.add(signupButton);
@@ -289,7 +295,15 @@ public class LoginFrame extends JFrame implements MouseListener {
                 String password = String.valueOf(passField.getPassword());
 
                 Account account = new Account(this, userType, name, password);
-                account.checkAccount();
+                boolean isLoggedIn = account.loginAccount();
+
+                if (isLoggedIn) {
+                    StudentFrame studentFrame = new StudentFrame(name, userType);
+                    studentFrame.setVisible(true);
+                    this.setVisible(false);
+
+                    System.out.println("Logged in as \"" + name + "\"");
+                }
             }
         } else if (e.getSource() == signupButton) {
             signupFrame = new SignupFrame();
@@ -313,7 +327,7 @@ public class LoginFrame extends JFrame implements MouseListener {
         if (e.getSource() == forgotButton) {
             forgotButton.setForeground(Color.RED);
         } else if (e.getSource() == signupButton) {
-            signupButton.setForeground(new Color(0, 125, 255));
+            signupButton.setForeground(Utils.BLUE);
         } else if (e.getSource() == backButton) {
             backButton.setBackground(Color.LIGHT_GRAY);
         }
@@ -322,7 +336,7 @@ public class LoginFrame extends JFrame implements MouseListener {
     @Override
     public void mouseExited(MouseEvent e) {
         if (e.getSource() == forgotButton) {
-            forgotButton.setForeground(new Color(0, 125, 255));
+            forgotButton.setForeground(Utils.BLUE);
         } else if (e.getSource() == signupButton) {
             signupButton.setForeground(Color.BLACK);
         } else if (e.getSource() == backButton) {
