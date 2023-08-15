@@ -9,6 +9,7 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 
 
@@ -298,11 +299,16 @@ public class LoginFrame extends JFrame implements MouseListener {
                 boolean isLoggedIn = account.loginAccount();
 
                 if (isLoggedIn) {
-                    StudentFrame studentFrame = new StudentFrame(name, userType);
-                    studentFrame.setVisible(true);
-                    this.setVisible(false);
+                    if (userType.equals("librarian")) {
+                        LibrarianFrame librarianFrame = new LibrarianFrame(name, userType);
+                        librarianFrame.setVisible(true);
+                    } else if (userType.equals("student")) {
+                        StudentFrame studentFrame = new StudentFrame(name, userType);
+                        studentFrame.setVisible(true);
+                    }
 
-                    System.out.println("Logged in as \"" + name + "\"");
+                    this.setVisible(false);
+                    System.out.println("Logged in as \"" + name + " - " + userType + "\"");
                 }
             }
         } else if (e.getSource() == signupButton) {

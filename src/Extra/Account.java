@@ -6,6 +6,8 @@ import javax.swing.*;
 import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Account {
     private JFrame parentComponent;
@@ -95,9 +97,8 @@ public class Account {
     public void addAccount() {
         DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd, hh:mm:ss a");
         String registrationTime = LocalDateTime.now().format(format);
-        String userInfo = "===============================================\n" +
+        String userInfo = "Name: " + name + "\n" +
                 "ID: " + id + "\n" +
-                "Name: " + name + "\n" +
                 "Email Address: " + mail + "\n" +
                 "Password: " + password + "\n" +
                 "Gender: " + gender + "\n" +
@@ -113,7 +114,7 @@ public class Account {
 
             File parentDir = file.getParentFile();
             if (!parentDir.exists()) {
-                parentDir.mkdirs();
+                parentDir.mkdir();
                 file.createNewFile();
             }
 
@@ -124,7 +125,7 @@ public class Account {
 
             JOptionPane.showMessageDialog(
                     parentComponent,
-                    " Extra.Account creation successful. Now you can try logging in.",
+                    " Account creation successful. Now you can try logging in.",
                     "Success",
                     JOptionPane.INFORMATION_MESSAGE
             );
@@ -156,9 +157,9 @@ public class Account {
 
             File parentDir = file.getParentFile();
             if (!parentDir.exists()) {
-                parentDir.mkdirs();
-                file.createNewFile();
+                parentDir.mkdir();
             }
+            file.createNewFile();
 
             reader = new BufferedReader(new FileReader(file));
             String line;
@@ -187,6 +188,64 @@ public class Account {
             );
             throw new RuntimeException(e);
         }
+    }
+
+    public void deleteAccount(String name) {
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader("src/data/student.txt"));
+            List<String> lines = new ArrayList<>();
+            String line;
+
+            while ((line = reader.readLine()) != null) {
+                lines.add(line);
+            }
+            reader.close();
+
+            List<String> updatedLines = new ArrayList<>();
+            boolean deleteMode = false;
+
+            for (String currentLine : lines) {
+
+                if (currentLine.contains("Name: " + name)) {
+                    deleteMode = true;
+                }
+
+                if (!deleteMode) {
+                    updatedLines.add(currentLine);
+                }
+
+                if (currentLine.equals("===============================================")) {
+                    deleteMode = false;
+                }
+            }
+
+            BufferedWriter writer = new BufferedWriter(new FileWriter("src/data/student.txt"));
+            for (int i = 0; i < updatedLines.size(); i++) {
+                writer.write(updatedLines.get(i));
+                writer.newLine();
+            }
+            writer.flush();
+            writer.close();
+            System.out.println("Deleted Account: " + name);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public int accountCount() {
+        int count = 0;
+        try {
+            reader = new BufferedReader(new FileReader("src/data/student.txt"));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.contains("ID: ")) {
+                    count++;
+                }
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return count;
     }
 
     public boolean loginAccount() {

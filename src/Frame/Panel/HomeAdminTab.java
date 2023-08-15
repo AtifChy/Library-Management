@@ -1,18 +1,19 @@
 package Frame.Panel;
 
+import Extra.Account;
 import Extra.Utils;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class HomeTab extends JPanel {
+public class HomeAdminTab extends JPanel {
     private JLabel totalBook;
     private JLabel availBook;
     private JLabel returnBook;
-    private BorrowTab borrowTab;
-    private ReturnTab returnTab;
 
-    public HomeTab(BorrowTab borrowTab, ReturnTab returnTab, String name, String userType) {
+    public HomeAdminTab(String name, String userType) {
+        Account account = new Account(null, userType, name, null);
+
         this.setLayout(new BorderLayout());
         JPanel userPanel = new JPanel();
         userPanel.setLayout(new BoxLayout(userPanel, BoxLayout.Y_AXIS));
@@ -51,9 +52,11 @@ public class HomeTab extends JPanel {
         availBookLabel.setFont(Utils.NORMAL_BOLD_FONT);
         aboutPanel.add(availBookLabel);
 
-        JLabel returnBookLabel = new JLabel("Books to Return");
+        JLabel returnBookLabel = new JLabel("Number of Student");
         returnBookLabel.setFont(Utils.NORMAL_BOLD_FONT);
         aboutPanel.add(returnBookLabel);
+
+        BorrowTab borrowTab = new BorrowTab(name);
 
         JPanel totalBookPanel = new JPanel();
         totalBookPanel.setLayout(new BoxLayout(totalBookPanel, BoxLayout.X_AXIS));
@@ -81,7 +84,7 @@ public class HomeTab extends JPanel {
         returnBookPanel.setLayout(new BoxLayout(returnBookPanel, BoxLayout.X_AXIS));
         returnBookPanel.setBackground(Color.LIGHT_GRAY);
         returnBookPanel.setBorder(BorderFactory.createMatteBorder(10, 0, 0, 0, Utils.BLUE));
-        returnBook = new JLabel(String.valueOf(returnTab.getReturnTableRowCount()));
+        returnBook = new JLabel(String.valueOf(account.accountCount()));
         returnBook.setFont(Utils.HUGE_FONT);
         returnBookPanel.add(Box.createHorizontalGlue());
         returnBookPanel.add(returnBook);
@@ -94,14 +97,5 @@ public class HomeTab extends JPanel {
         this.add(userPanel, BorderLayout.NORTH);
         this.add(aboutPanel, BorderLayout.CENTER);
         this.add(emptyPanel, BorderLayout.SOUTH);
-
-        this.borrowTab = borrowTab;
-        this.returnTab = returnTab;
-    }
-
-    public void updateBookCount() {
-        totalBook.setText(String.valueOf(borrowTab.getTotalBookCount()));
-        availBook.setText(String.valueOf(borrowTab.getAvailableBooKCount()));
-        returnBook.setText(String.valueOf(returnTab.getReturnTableRowCount()));
     }
 }
