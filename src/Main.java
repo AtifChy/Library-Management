@@ -1,14 +1,18 @@
 import Frame.LoginFrame;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class Main {
     public static void main(String[] args) {
         new LoginFrame();
+        /*
+        LocalDateTime rawDateTime = LocalDateTime.now();
+        System.out.println(rawDateTime);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mma");
+        String formattedDateTime = rawDateTime.format(formatter);
+        System.out.println(formattedDateTime);
+        */
     }
 }

@@ -9,8 +9,8 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.nio.Buffer;
 
 
 public class LoginFrame extends JFrame implements MouseListener {
@@ -38,18 +38,9 @@ public class LoginFrame extends JFrame implements MouseListener {
     private final JButton backButton;
     private final ImageIcon showIcon;
     private final ImageIcon hideIcon;
-    private final Font introFont = Utils.INTRO_FONT;
-    private final Font normalFont = Utils.NORMAL_FONT;
-    private final Font normalBoldFont = Utils.NORMAL_BOLD_FONT;
-
-    private final Font smallFont = Utils.SMALL_FONT;
-    private final Font smallBoldFont = Utils.SMALL_BOLD_FONT;
-
-    private final Font bigFont = Utils.BIG_FONT;
-    private final Font bigBoldFont = Utils.BIG_BOLD_FONT;
-    private final BufferedImage resizedImage;
     private SignupFrame signupFrame;
     private ForgotPassFrame forgotPassFrame;
+    private File file;
 
     public LoginFrame() {
         super("LogIn");
@@ -61,8 +52,8 @@ public class LoginFrame extends JFrame implements MouseListener {
         this.setResizable(false);
         this.setLayout(new BorderLayout());
 
-        UIManager.put("OptionPane.messageFont", normalFont);
-        UIManager.put("OptionPane.buttonFont", normalFont);
+        UIManager.put("OptionPane.messageFont", Utils.NORMAL_FONT);
+        UIManager.put("OptionPane.buttonFont", Utils.NORMAL_FONT);
 
         loginPanel = new JPanel();
         loginPanel.setPreferredSize(new Dimension(560, 700));
@@ -74,7 +65,7 @@ public class LoginFrame extends JFrame implements MouseListener {
         introPanel.setBackground(Utils.BACKGROUND_COLOR);
 
         introLabel = new JLabel("Welcome");
-        introLabel.setFont(introFont);
+        introLabel.setFont(Utils.INTRO_FONT);
         introPanel.add(introLabel);
         loginPanel.add(introPanel);
 
@@ -86,16 +77,16 @@ public class LoginFrame extends JFrame implements MouseListener {
         ImageIcon checkedIcon = new ImageIcon("src/images/radio_checked.png");
         ImageIcon unCheckedIcon = new ImageIcon("src/images/radio_unchecked.png");
         librarianButton = new JRadioButton("Librarian", unCheckedIcon);
-        librarianButton.setActionCommand("librarian");
+        librarianButton.setActionCommand("Librarian");
         librarianButton.setSelectedIcon(checkedIcon);
-        librarianButton.setFont(smallBoldFont);
+        librarianButton.setFont(Utils.SMALL_BOLD_FONT);
         librarianButton.setBackground(Utils.BACKGROUND_COLOR);
         librarianButton.setFocusable(false);
         librarianButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         studentButton = new JRadioButton("Student", unCheckedIcon);
-        studentButton.setActionCommand("student");
+        studentButton.setActionCommand("Student");
         studentButton.setSelectedIcon(checkedIcon);
-        studentButton.setFont(smallBoldFont);
+        studentButton.setFont(Utils.SMALL_BOLD_FONT);
         studentButton.setBackground(Utils.BACKGROUND_COLOR);
         studentButton.setFocusable(false);
         studentButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -110,13 +101,13 @@ public class LoginFrame extends JFrame implements MouseListener {
         loginPanel.add(radioPanel);
 
         nameLabel = new JLabel("User Name");
-        nameLabel.setFont(normalFont);
+        nameLabel.setFont(Utils.NORMAL_FONT);
         nameLabel.setPreferredSize(new Dimension(420, 28));
         loginPanel.add(nameLabel);
 
         nameField = new JTextField();
         nameField.setPreferredSize(new Dimension(420, 56));
-        nameField.setFont(bigFont);
+        nameField.setFont(Utils.BIG_FONT);
         nameField.setToolTipText("Enter your user name");
         nameField.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createMatteBorder(0, 0, 1, 0, Color.BLACK),
@@ -126,13 +117,13 @@ public class LoginFrame extends JFrame implements MouseListener {
         loginPanel.add(nameField);
 
         passLabel = new JLabel("Password");
-        passLabel.setFont(normalFont);
+        passLabel.setFont(Utils.NORMAL_FONT);
         passLabel.setPreferredSize(new Dimension(420, 28));
         loginPanel.add(passLabel);
 
         passField = new JPasswordField();
         passField.setPreferredSize(new Dimension(390, 56));
-        passField.setFont(bigFont);
+        passField.setFont(Utils.BIG_FONT);
         passField.setToolTipText("Enter your password");
         passField.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createMatteBorder(0, 0, 1, 0, Color.BLACK),
@@ -166,13 +157,13 @@ public class LoginFrame extends JFrame implements MouseListener {
         rememberBox.setFocusable(false);
         rememberBox.setIcon(new ImageIcon("src/images/checkbox_blank.png"));
         rememberBox.setSelectedIcon(new ImageIcon("src/images/checkbox_selected.png"));
-        rememberBox.setFont(smallFont);
+        rememberBox.setFont(Utils.SMALL_FONT);
         rememberBox.setBackground(Utils.BACKGROUND_COLOR);
         rememberBox.setCursor(new Cursor(Cursor.HAND_CURSOR));
         rememberPanel.add(rememberBox, BorderLayout.WEST);
 
         forgotButton = new JButton("Forgot password?");
-        forgotButton.setFont(smallFont);
+        forgotButton.setFont(Utils.SMALL_FONT);
         forgotButton.setBorderPainted(false);
         forgotButton.setFocusable(false);
         forgotButton.setBackground(Utils.BACKGROUND_COLOR);
@@ -196,7 +187,7 @@ public class LoginFrame extends JFrame implements MouseListener {
         buttonPanel.setBackground(Utils.BACKGROUND_COLOR);
 
         loginButton = new JButton("Log in");
-        loginButton.setFont(bigBoldFont);
+        loginButton.setFont(Utils.BIG_BOLD_FONT);
         loginButton.setFocusable(false);
         loginButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         loginButton.addMouseListener(this);
@@ -205,12 +196,12 @@ public class LoginFrame extends JFrame implements MouseListener {
 
         signupLabel = new JLabel("Don't have an account yet?");
         signupLabel.setPreferredSize(new Dimension(210, 50));
-        signupLabel.setFont(normalFont);
+        signupLabel.setFont(Utils.NORMAL_FONT);
         loginPanel.add(signupLabel);
 
         signupButton = new JButton("Sign up");
         signupButton.setPreferredSize(new Dimension(70, 50));
-        signupButton.setFont(normalBoldFont);
+        signupButton.setFont(Utils.NORMAL_BOLD_FONT);
         signupButton.setBorderPainted(false);
         signupButton.setFocusable(false);
         signupButton.setBackground(Utils.BACKGROUND_COLOR);
@@ -245,12 +236,7 @@ public class LoginFrame extends JFrame implements MouseListener {
         naviPanel.add(backButton, BorderLayout.WEST);
         imagePanel.add(naviPanel);
 
-        try {
-            resizedImage = Utils.resizeImage("src/images/login.jpg", 450, 450);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        ImageIcon image = new ImageIcon(resizedImage);
+        ImageIcon image = new ImageIcon("src/images/login.jpg");
         JLabel imageLabel = new JLabel(image);
         imageLabel.setBorder(BorderFactory.createEmptyBorder(25, 0, 0, 20));
         imagePanel.add(imageLabel);
@@ -283,32 +269,55 @@ public class LoginFrame extends JFrame implements MouseListener {
                         "Login Error",
                         JOptionPane.ERROR_MESSAGE
                 );
-            } else if (nameField.getText().isEmpty() || passField.getPassword().length == 0) {
-                JOptionPane.showMessageDialog(
-                        this,
-                        "Please, Fill the black areas.",
-                        "Warning",
-                        JOptionPane.WARNING_MESSAGE
-                );
             } else {
                 String userType = loginGroup.getSelection().getActionCommand();
                 String name = nameField.getText();
                 String password = String.valueOf(passField.getPassword());
 
-                Account account = new Account(this, userType, name, password);
-                boolean isLoggedIn = account.loginAccount();
+                if (userType.equals("Librarian")) {
+                    file = new File("src/data/librarian.txt");
+                } else if (userType.equals("Student")) {
+                    file = new File("src/data/student.txt");
+                }
 
-                if (isLoggedIn) {
-                    if (userType.equals("librarian")) {
-                        LibrarianFrame librarianFrame = new LibrarianFrame(name, userType);
-                        librarianFrame.setVisible(true);
-                    } else if (userType.equals("student")) {
-                        StudentFrame studentFrame = new StudentFrame(name, userType);
-                        studentFrame.setVisible(true);
+                boolean newPassSet = false;
+                try {
+                    BufferedReader reader = new BufferedReader(new FileReader(file));
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        String[] data = line.split(",");
+                        if (data[0].equals(name) && data[3].equals("NO_PASSWORD_SET")) {
+                            newPassSet = true;
+                        }
                     }
+                    reader.close();
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
 
-                    this.setVisible(false);
-                    System.out.println("Logged in as \"" + name + " - " + userType + "\"");
+                if (nameField.getText().isEmpty() && passField.getPassword().length == 0 && !newPassSet) {
+                    JOptionPane.showMessageDialog(
+                            this,
+                            "Please, Fill the black areas.",
+                            "Warning",
+                            JOptionPane.WARNING_MESSAGE
+                    );
+                } else {
+                    Account account = new Account(this);
+                    boolean isLoggedIn = account.loginAccount(userType, name, password);
+                    System.out.println(isLoggedIn);
+                    if (isLoggedIn) {
+                        if (userType.equals("Librarian")) {
+                            LibrarianFrame librarianFrame = new LibrarianFrame(name, userType);
+                            librarianFrame.setVisible(true);
+                        } else if (userType.equals("Student")) {
+                            StudentFrame studentFrame = new StudentFrame(name, userType);
+                            studentFrame.setVisible(true);
+                        }
+
+                        this.setVisible(false);
+                        System.out.println("Logged in as \"" + name + " - " + userType + "\"");
+                    }
                 }
             }
         } else if (e.getSource() == signupButton) {

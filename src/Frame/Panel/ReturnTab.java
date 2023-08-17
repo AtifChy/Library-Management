@@ -19,8 +19,8 @@ public class ReturnTab extends JPanel implements ActionListener, KeyListener {
     private final JButton returnAddButton;
     private final JTable returnTable;
     private final JTextField searchField;
-    private DefaultTableModel returnTableModel;
-    private String name;
+    private final DefaultTableModel returnTableModel;
+    private final String name;
     private String returnPath;
     private String borrowPath;
     private HomeTab homeTab;

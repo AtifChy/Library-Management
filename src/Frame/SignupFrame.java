@@ -9,6 +9,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Random;
 
 public class SignupFrame extends JFrame implements MouseListener {
@@ -34,17 +35,6 @@ public class SignupFrame extends JFrame implements MouseListener {
     private LoginFrame loginFrame;
     private final JButton signupButton;
     private final JButton loginButton;
-    private final Color backgroundColor = Utils.BACKGROUND_COLOR;
-    private final Font introFont = Utils.INTRO_FONT;
-    private final Font normalFont = Utils.NORMAL_FONT;
-    private final Font normalBoldFont = Utils.NORMAL_BOLD_FONT;
-
-    private final Font smallFont = Utils.SMALL_FONT;
-    private final Font smallBoldFont = Utils.SMALL_BOLD_FONT;
-
-    private final Font bigFont = Utils.BIG_FONT;
-    private final Font bigBoldFont = Utils.BIG_BOLD_FONT;
-
 
     public SignupFrame() {
         super("SignUp");
@@ -56,8 +46,8 @@ public class SignupFrame extends JFrame implements MouseListener {
         this.setResizable(false);
         this.setLayout(new BorderLayout());
 
-        UIManager.put("OptionPane.messageFont", normalFont);
-        UIManager.put("OptionPane.buttonFont", normalFont);
+        UIManager.put("OptionPane.messageFont", Utils.NORMAL_FONT);
+        UIManager.put("OptionPane.buttonFont", Utils.NORMAL_FONT);
 
         // Start of Left Panel
         leftPanel = new JPanel();
@@ -98,36 +88,36 @@ public class SignupFrame extends JFrame implements MouseListener {
         rightPanel.setLayout(new FlowLayout());
         rightPanel.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 0));
         rightPanel.setPreferredSize(new Dimension(600, 800));
-        rightPanel.setBackground(backgroundColor);
+        rightPanel.setBackground(Utils.BACKGROUND_COLOR);
 
         introPanel = new JPanel();
         introPanel.setPreferredSize(new Dimension(600, 130));
         introPanel.setBorder(BorderFactory.createEmptyBorder(60, 0, 20, 0));
-        introPanel.setBackground(backgroundColor);
+        introPanel.setBackground(Utils.BACKGROUND_COLOR);
 
         introLabel = new JLabel("Create Account");
-        introLabel.setFont(introFont);
+        introLabel.setFont(Utils.INTRO_FONT);
         introPanel.add(introLabel);
         rightPanel.add(introPanel);
 
         radioPanel = new JPanel();
         radioPanel.setLayout(new BorderLayout());
         radioPanel.setPreferredSize(new Dimension(200, 30));
-        radioPanel.setBackground(backgroundColor);
+        radioPanel.setBackground(Utils.BACKGROUND_COLOR);
 
         ImageIcon checkedIcon = new ImageIcon("src/images/radio_checked.png");
         ImageIcon unCheckedIcon = new ImageIcon("src/images/radio_unchecked.png");
         librarianButton = new JRadioButton("Librarian", unCheckedIcon);
-        librarianButton.setActionCommand("librarian");
+        librarianButton.setActionCommand("Librarian");
         librarianButton.setSelectedIcon(checkedIcon);
-        librarianButton.setFont(smallBoldFont);
-        librarianButton.setBackground(backgroundColor);
+        librarianButton.setFont(Utils.SMALL_BOLD_FONT);
+        librarianButton.setBackground(Utils.BACKGROUND_COLOR);
         librarianButton.setFocusable(false);
         studentButton = new JRadioButton("Student", unCheckedIcon);
-        studentButton.setActionCommand("student");
+        studentButton.setActionCommand("Student");
         studentButton.setSelectedIcon(checkedIcon);
-        studentButton.setFont(smallBoldFont);
-        studentButton.setBackground(backgroundColor);
+        studentButton.setFont(Utils.SMALL_BOLD_FONT);
+        studentButton.setBackground(Utils.BACKGROUND_COLOR);
         studentButton.setFocusable(false);
 
         loginGroup = new ButtonGroup();
@@ -139,12 +129,12 @@ public class SignupFrame extends JFrame implements MouseListener {
         rightPanel.add(radioPanel);
 
         JLabel nameLabel = new JLabel("User Name");
-        nameLabel.setFont(normalFont);
+        nameLabel.setFont(Utils.NORMAL_FONT);
         nameLabel.setPreferredSize(new Dimension(420, 30));
         rightPanel.add(nameLabel);
 
         nameField = new JTextField();
-        nameField.setFont(bigFont);
+        nameField.setFont(Utils.BIG_FONT);
         nameField.setPreferredSize(new Dimension(420, 50));
         nameField.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createMatteBorder(0, 0, 1, 0, Color.BLACK),
@@ -153,12 +143,12 @@ public class SignupFrame extends JFrame implements MouseListener {
         rightPanel.add(nameField);
 
         JLabel mailLabel = new JLabel("Email Address");
-        mailLabel.setFont(normalFont);
+        mailLabel.setFont(Utils.NORMAL_FONT);
         mailLabel.setPreferredSize(new Dimension(420, 30));
         rightPanel.add(mailLabel);
 
         mailField = new JTextField();
-        mailField.setFont(bigFont);
+        mailField.setFont(Utils.BIG_FONT);
         mailField.setPreferredSize(new Dimension(420, 50));
         mailField.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createMatteBorder(0, 0, 1, 0, Color.BLACK),
@@ -169,18 +159,18 @@ public class SignupFrame extends JFrame implements MouseListener {
         JPanel optionalPanel = new JPanel();
         optionalPanel.setLayout(new GridLayout(2, 2, 10, 0));
         optionalPanel.setPreferredSize(new Dimension(420, 80));
-        optionalPanel.setBackground(backgroundColor);
+        optionalPanel.setBackground(Utils.BACKGROUND_COLOR);
 
         JLabel idLabel = new JLabel("ID");
-        idLabel.setFont(smallFont);
+        idLabel.setFont(Utils.SMALL_FONT);
         optionalPanel.add(idLabel);
 
         JLabel genderLabel = new JLabel("Gender");
-        genderLabel.setFont(smallFont);
+        genderLabel.setFont(Utils.SMALL_FONT);
         optionalPanel.add(genderLabel);
 
         idField = new JTextField();
-        idField.setFont(normalFont);
+        idField.setFont(Utils.NORMAL_FONT);
         idField.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createMatteBorder(0, 0, 1, 0, Color.BLACK),
                 BorderFactory.createEmptyBorder(0, 5, 0, 0)
@@ -189,7 +179,7 @@ public class SignupFrame extends JFrame implements MouseListener {
 
         String[] gender = {"Male", "Female", "Other"};
         genderBox = new JComboBox<>(gender);
-        genderBox.setFont(normalFont);
+        genderBox.setFont(Utils.NORMAL_FONT);
         optionalPanel.add(genderBox);
 
         rightPanel.add(optionalPanel);
@@ -197,18 +187,18 @@ public class SignupFrame extends JFrame implements MouseListener {
         JPanel passwordPanel = new JPanel();
         passwordPanel.setLayout(new GridLayout(2, 2, 10, 0));
         passwordPanel.setPreferredSize(new Dimension(420, 80));
-        passwordPanel.setBackground(backgroundColor);
+        passwordPanel.setBackground(Utils.BACKGROUND_COLOR);
 
         JLabel passLabel = new JLabel("Password");
-        passLabel.setFont(smallFont);
+        passLabel.setFont(Utils.SMALL_FONT);
         passwordPanel.add(passLabel);
 
         JLabel confirmPassLabel = new JLabel("Confirm Password");
-        confirmPassLabel.setFont(smallFont);
+        confirmPassLabel.setFont(Utils.SMALL_FONT);
         passwordPanel.add(confirmPassLabel);
 
         passField = new JPasswordField();
-        passField.setFont(normalFont);
+        passField.setFont(Utils.NORMAL_FONT);
         passField.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createMatteBorder(0, 0, 1, 0, Color.BLACK),
                 BorderFactory.createEmptyBorder(0, 5, 0, 0)
@@ -216,7 +206,7 @@ public class SignupFrame extends JFrame implements MouseListener {
         passwordPanel.add(passField);
 
         confirmPassField = new JPasswordField();
-        confirmPassField.setFont(normalFont);
+        confirmPassField.setFont(Utils.NORMAL_FONT);
         confirmPassField.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createMatteBorder(0, 0, 1, 0, Color.BLACK),
                 BorderFactory.createEmptyBorder(0, 5, 0, 0)
@@ -226,13 +216,13 @@ public class SignupFrame extends JFrame implements MouseListener {
         rightPanel.add(passwordPanel);
 
         JLabel captchaLabel = new JLabel("Captcha");
-        captchaLabel.setFont(smallFont);
+        captchaLabel.setFont(Utils.SMALL_FONT);
         captchaLabel.setPreferredSize(new Dimension(420, 25));
         rightPanel.add(captchaLabel);
 
         JPanel captchaPanel = new JPanel();
         captchaPanel.setPreferredSize(new Dimension(425, 50));
-        captchaPanel.setBackground(backgroundColor);
+        captchaPanel.setBackground(Utils.BACKGROUND_COLOR);
 
         Random random = new Random();
         int num1 = random.nextInt(10);
@@ -244,13 +234,13 @@ public class SignupFrame extends JFrame implements MouseListener {
         theCaptchaPanel.setPreferredSize(new Dimension(80, 40));
         theCaptchaPanel.setBorder(BorderFactory.createEmptyBorder(3, 0, 0, 0));
         JLabel theCaptcha = new JLabel(num1 + " + " + num2);
-        theCaptcha.setFont(bigBoldFont);
+        theCaptcha.setFont(Utils.BIG_BOLD_FONT);
         theCaptchaPanel.add(theCaptcha);
         captchaPanel.add(theCaptchaPanel);
 
         captchaField = new JTextField();
         captchaField.setPreferredSize(new Dimension(335, 40));
-        captchaField.setFont(normalFont);
+        captchaField.setFont(Utils.NORMAL_FONT);
         captchaField.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createMatteBorder(0, 0, 1, 0, Color.BLACK),
                 BorderFactory.createEmptyBorder(0, 5, 0, 0)
@@ -263,10 +253,10 @@ public class SignupFrame extends JFrame implements MouseListener {
         buttonPanel.setLayout(new GridLayout(1, 1));
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(20, 0, 10, 0));
         buttonPanel.setPreferredSize(new Dimension(420, 80));
-        buttonPanel.setBackground(backgroundColor);
+        buttonPanel.setBackground(Utils.BACKGROUND_COLOR);
 
         signupButton = new JButton("Sign Up");
-        signupButton.setFont(bigBoldFont);
+        signupButton.setFont(Utils.BIG_BOLD_FONT);
         signupButton.setFocusable(false);
         signupButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         signupButton.addMouseListener(this);
@@ -275,21 +265,21 @@ public class SignupFrame extends JFrame implements MouseListener {
 
         JLabel loginLabel = new JLabel("Already have an account?");
         loginLabel.setPreferredSize(new Dimension(200, 30));
-        loginLabel.setFont(normalFont);
+        loginLabel.setFont(Utils.NORMAL_FONT);
         rightPanel.add(loginLabel);
 
         loginButton = new JButton("Log in");
         loginButton.setPreferredSize(new Dimension(60, 30));
-        loginButton.setFont(normalBoldFont);
+        loginButton.setFont(Utils.NORMAL_BOLD_FONT);
         loginButton.setBorderPainted(false);
         loginButton.setFocusable(false);
-        loginButton.setBackground(backgroundColor);
+        loginButton.setBackground(Utils.BACKGROUND_COLOR);
         loginButton.setMargin(new Insets(0, 0, 0, 0));
         loginButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         loginButton.addMouseListener(this);
         loginButton.setUI(new BasicButtonUI() {
             private Color getSelectColor() {
-                return backgroundColor;
+                return Utils.BACKGROUND_COLOR;
             }
         });
         rightPanel.add(loginButton);
@@ -327,9 +317,7 @@ public class SignupFrame extends JFrame implements MouseListener {
                         "Incomplete Warning",
                         JOptionPane.WARNING_MESSAGE
                 );
-            } else if (!String.valueOf(passField.getPassword()).equals(
-                    String.valueOf(confirmPassField.getPassword())
-            )) {
+            } else if (!Arrays.equals(passField.getPassword(), confirmPassField.getPassword())) {
                 JOptionPane.showMessageDialog(
                         this,
                         "Passwords do not match. Please, try again.",
@@ -360,13 +348,25 @@ public class SignupFrame extends JFrame implements MouseListener {
                 String password = String.valueOf(passField.getPassword());
                 String gender = (String) genderBox.getSelectedItem();
 
-                Account account = new Account(this, userType, id, name, mail, password, gender);
-                if (!account.accountExists(name, id)) {
-                    account.addAccount();
+                Account account = new Account(this);
+                if (!account.accountExists(userType, name, id)) {
+                    account.addAccount(userType, id, name, mail, password, gender);
+                    JOptionPane.showMessageDialog(
+                            this,
+                            " Account creation successful. Now you can try logging in.",
+                            "Success",
+                            JOptionPane.INFORMATION_MESSAGE
+                    );
+
+                    if (loginFrame == null) {
+                        loginFrame = new LoginFrame();
+                    }
+                    loginFrame.setVisible(true);
+                    this.setVisible(false);
                 } else {
                     JOptionPane.showMessageDialog(
                             this,
-                            "Account with same Name & id already exists.",
+                            "Account with same Username or ID already exists.",
                             "Warning",
                             JOptionPane.WARNING_MESSAGE
                     );

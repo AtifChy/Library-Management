@@ -6,11 +6,11 @@ import javax.swing.*;
 import java.awt.*;
 
 public class HomeTab extends JPanel {
-    private JLabel totalBook;
-    private JLabel availBook;
-    private JLabel returnBook;
-    private BorrowTab borrowTab;
-    private ReturnTab returnTab;
+    private final JLabel totalBook;
+    private final JLabel availBook;
+    private final JLabel returnBook;
+    private final BorrowTab borrowTab;
+    private final ReturnTab returnTab;
 
     public HomeTab(BorrowTab borrowTab, ReturnTab returnTab, String name, String userType) {
         this.setLayout(new BorderLayout());
@@ -27,7 +27,7 @@ public class HomeTab extends JPanel {
         userIcon.setAlignmentX(Component.CENTER_ALIGNMENT);
         userPanel.add(userIcon);
 
-        JLabel userLabel = new JLabel("Name: " + name);
+        JLabel userLabel = new JLabel("Name: " + name.toUpperCase());
         userLabel.setFont(Utils.NORMAL_BOLD_FONT);
         userLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         userPanel.add(userLabel);

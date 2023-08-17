@@ -7,9 +7,9 @@ import javax.swing.*;
 import java.awt.*;
 
 public class HomeAdminTab extends JPanel {
-    private JLabel totalBook;
-    private JLabel availBook;
-    private JLabel returnBook;
+    private final JLabel totalBook;
+    private final JLabel availBook;
+    private final JLabel returnBook;
 
     public HomeAdminTab(String name, String userType) {
         Account account = new Account(null, userType, name, null);
@@ -28,7 +28,7 @@ public class HomeAdminTab extends JPanel {
         userIcon.setAlignmentX(Component.CENTER_ALIGNMENT);
         userPanel.add(userIcon);
 
-        JLabel userLabel = new JLabel("Name: " + name);
+        JLabel userLabel = new JLabel("Name: " + name.toUpperCase());
         userLabel.setFont(Utils.NORMAL_BOLD_FONT);
         userLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         userPanel.add(userLabel);

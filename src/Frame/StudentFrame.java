@@ -7,7 +7,6 @@ import Frame.Panel.ProfileTab;
 import Frame.Panel.ReturnTab;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,16 +14,16 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 public class StudentFrame extends JFrame implements ActionListener, MouseListener {
-    private JTabbedPane tabbedPane;
-    private JButton homeButton;
-    private JButton borrowButton;
-    private JButton returnButton;
-    private JButton profileButton;
-    private JButton logoutButton;
-    private HomeTab homeTab;
-    private BorrowTab borrowTab;
-    private ReturnTab returnTab;
-    private ProfileTab profileTab;
+    private final JTabbedPane tabbedPane;
+    private final JButton homeButton;
+    private final JButton borrowButton;
+    private final JButton returnButton;
+    private final JButton profileButton;
+    private final JButton logoutButton;
+    private final HomeTab homeTab;
+    private final BorrowTab borrowTab;
+    private final ReturnTab returnTab;
+    private final ProfileTab profileTab;
     private LoginFrame loginFrame;
 
     public StudentFrame(String name, String userType) {

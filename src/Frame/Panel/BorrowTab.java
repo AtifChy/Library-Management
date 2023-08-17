@@ -23,10 +23,10 @@ public class BorrowTab extends JPanel implements ActionListener, KeyListener {
     private final JTable borrowTable;
     private String borrowPath;
     private String returnPath;
-    private String name;
+    private final String name;
     private HomeTab homeTab;
     private ReturnTab returnTab;
-    private JTextField searchField;
+    private final JTextField searchField;
 
     public BorrowTab(String name) {
         this.setLayout(new BorderLayout());

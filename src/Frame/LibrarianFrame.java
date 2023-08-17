@@ -12,11 +12,11 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 public class LibrarianFrame extends JFrame implements MouseListener {
-    private JTabbedPane tabbedPane;
-    private JButton homeButton;
-    private JButton bookButton;
-    private JButton accountButton;
-    private JButton logoutButton;
+    private final JTabbedPane tabbedPane;
+    private final JButton homeButton;
+    private final JButton bookButton;
+    private final JButton accountButton;
+    private final JButton logoutButton;
     private LoginFrame loginFrame;
 
     public LibrarianFrame(String name, String userType) {

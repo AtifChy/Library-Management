@@ -7,6 +7,7 @@ import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Account {
@@ -21,6 +22,13 @@ public class Account {
     private BufferedReader reader;
     private LoginFrame loginFrame;
 
+    public Account() {
+    }
+
+    public Account(JFrame parentComponent) {
+        this.parentComponent = parentComponent;
+    }
+
     public Account(JFrame parentComponent, String userType, String name, String password) {
         this.parentComponent = parentComponent;
         this.userType = userType;
@@ -28,8 +36,7 @@ public class Account {
         this.password = password;
     }
 
-    public Account(JFrame parentComponent, String userType, String id, String name, String mail, String password, String gender) {
-        this.parentComponent = parentComponent;
+    public Account(String userType, String id, String name, String mail, String password, String gender) {
         this.userType = userType;
         this.id = id;
         this.name = name;
@@ -94,21 +101,16 @@ public class Account {
         this.gender = gender;
     }
 
-    public void addAccount() {
-        DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd, hh:mm:ss a");
+    public void addAccount(String userType, String id, String name, String mail, String password, String gender) {
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mma");
         String registrationTime = LocalDateTime.now().format(format);
-        String userInfo = "Name: " + name + "\n" +
-                "ID: " + id + "\n" +
-                "Email Address: " + mail + "\n" +
-                "Password: " + password + "\n" +
-                "Gender: " + gender + "\n" +
-                "Registration Time: " + registrationTime + "\n" +
-                "===============================================\n";
+        String[] rawUserInfo = {id, name, mail, password, gender, registrationTime};
+        String userInfo = String.join(",", rawUserInfo);
 
         try {
-            if (userType.equals("librarian")) {
+            if (userType.equals("Librarian")) {
                 file = new File("src/data/librarian.txt");
-            } else if (userType.equals("student")) {
+            } else if (userType.equals("Student")) {
                 file = new File("src/data/student.txt");
             }
 
@@ -120,26 +122,13 @@ public class Account {
 
             BufferedWriter writer = new BufferedWriter(new FileWriter(file, true));
             writer.write(userInfo);
+            writer.newLine();
             writer.flush();
             writer.close();
-
-            JOptionPane.showMessageDialog(
-                    parentComponent,
-                    " Account creation successful. Now you can try logging in.",
-                    "Success",
-                    JOptionPane.INFORMATION_MESSAGE
-            );
-
-            if (loginFrame == null) {
-                loginFrame = new LoginFrame();
-            }
-            loginFrame.setVisible(true);
-            parentComponent.setVisible(false);
-
         } catch (IOException e) {
             JOptionPane.showMessageDialog(
                     parentComponent,
-                    "Extra.Account creation failed.",
+                    "Account creation failed.",
                     "Failed",
                     JOptionPane.ERROR_MESSAGE
             );
@@ -147,11 +136,11 @@ public class Account {
         }
     }
 
-    public boolean accountExists(String name, String id) {
+    public boolean accountExists(String userType, String name, String id) {
         try {
-            if (userType.equals("librarian")) {
+            if (userType.equals("Librarian")) {
                 file = new File("src/data/librarian.txt");
-            } else if (userType.equals("student")) {
+            } else if (userType.equals("Student")) {
                 file = new File("src/data/student.txt");
             }
 
@@ -163,19 +152,11 @@ public class Account {
 
             reader = new BufferedReader(new FileReader(file));
             String line;
-            String foundName = null;
-            String foundID = null;
             while ((line = reader.readLine()) != null) {
-                if (line.contains("Name: ")) {
-                    foundName = line.replace("Name: ", "");
-                } else if (line.contains("ID: ")) {
-                    foundID = line.replace("ID: ", "");
-                }
-
-                if (foundName != null && foundID != null) {
-                    if (foundName.equals(name) && foundID.equals(id)) {
-                        return true;
-                    }
+                if (line.contains(id) && line.contains(name)) {
+                    return true;
+                } else if (line.contains(id) || line.contains(name)) {
+                    return true;
                 }
             }
             return false;
@@ -184,6 +165,108 @@ public class Account {
                     parentComponent,
                     "Error while checking account.",
                     "Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            throw new RuntimeException(e);
+        }
+    }
+
+    public boolean loginAccount(String userType, String name, String password) {
+        if (userType.equals("Librarian")) {
+            file = new File("src/data/librarian.txt");
+        } else if (userType.equals("Student")) {
+            file = new File("src/data/student.txt");
+        }
+        try {
+            reader = new BufferedReader(new FileReader(file));
+            String line;
+            List<String> lines = new ArrayList<>();
+            boolean newPassSet = false;
+            while ((line = reader.readLine()) != null) {
+                String[] data = line.split(",");
+                if (data[1].equals(name) && data[3].equals(password)) {
+                    JOptionPane.showMessageDialog(
+                            parentComponent,
+                            "Login successful.",
+                            "Success",
+                            JOptionPane.INFORMATION_MESSAGE
+                    );
+                    return true;
+                } else if (data[1].equals(name) && data[3].equals("NO_PASSWORD_SET")) {
+                    JPanel addPassword = new JPanel();
+
+                    JLabel newPassLabel = new JLabel("Enter New Password");
+                    JPasswordField newPassField = new JPasswordField(20);
+                    JLabel confirmPassLabel = new JLabel("Confirm Password");
+                    JPasswordField confirmPassField = new JPasswordField(20);
+
+                    addPassword.add(newPassLabel);
+                    addPassword.add(newPassField);
+                    addPassword.add(confirmPassLabel);
+                    addPassword.add(confirmPassField);
+
+                    int answer = JOptionPane.showConfirmDialog(
+                            parentComponent,
+                            addPassword,
+                            "Set Password",
+                            JOptionPane.OK_CANCEL_OPTION,
+                            JOptionPane.PLAIN_MESSAGE
+                    );
+
+                    if (answer == JOptionPane.OK_OPTION) {
+                        if (newPassField.getPassword().length == 0 && confirmPassField.getPassword().length == 0) {
+                            JOptionPane.showMessageDialog(
+                                    parentComponent,
+                                    "Password not set.",
+                                    "Warning",
+                                    JOptionPane.WARNING_MESSAGE
+                            );
+                            return false;
+                        } else if (!Arrays.equals(newPassField.getPassword(), confirmPassField.getPassword())) {
+                            JOptionPane.showMessageDialog(
+                                    parentComponent,
+                                    "Password mismatch.",
+                                    "Warning",
+                                    JOptionPane.WARNING_MESSAGE
+                            );
+                            newPassField.setText("");
+                            confirmPassField.setText("");
+                            return false;
+                        } else if (Arrays.equals(newPassField.getPassword(), confirmPassField.getPassword())) {
+                            String newPassword = String.valueOf(newPassField.getPassword());
+                            String updatedLine = line.replace("NO_PASSWORD_SET", newPassword);
+                            lines.add(updatedLine);
+                            newPassSet = true;
+                        }
+                    }
+                } else {
+                    lines.add(line);
+                    System.out.println(newPassSet);
+                }
+            }
+            reader.close();
+            if (newPassSet) {
+                BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+                for (int i = 0; i < lines.size(); i++) {
+                    writer.write(lines.get(i));
+                    writer.newLine();
+                }
+                writer.flush();
+                writer.close();
+                return true;
+            }
+            JOptionPane.showMessageDialog(
+                    parentComponent,
+                    "Invalid Username or Password",
+                    "Login failed.",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            return false;
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(
+                    parentComponent,
+                    "Error: " + file + " not found.",
+                    "Login failed.",
                     JOptionPane.ERROR_MESSAGE
             );
             throw new RuntimeException(e);
@@ -246,54 +329,5 @@ public class Account {
             throw new RuntimeException(e);
         }
         return count;
-    }
-
-    public boolean loginAccount() {
-        if (userType.equals("librarian")) {
-            file = new File("src/data/librarian.txt");
-        } else if (userType.equals("student")) {
-            file = new File("src/data/student.txt");
-        }
-
-        try {
-            reader = new BufferedReader(new FileReader(file));
-            String line;
-            String foundName = null;
-            String foundPassword = null;
-            while ((line = reader.readLine()) != null) {
-                if (line.contains("Name: ")) {
-                    foundName = line.replace("Name: ", "");
-                } else if (line.contains("Password: ")) {
-                    foundPassword = line.replace("Password: ", "");
-                }
-
-                if (foundName != null && foundPassword != null) {
-                    if (foundName.equals(name) && foundPassword.equals(password)) {
-                        JOptionPane.showMessageDialog(
-                                parentComponent,
-                                "Login successful.",
-                                "Success",
-                                JOptionPane.INFORMATION_MESSAGE
-                        );
-                        return true;
-                    }
-                }
-            }
-            JOptionPane.showMessageDialog(
-                    parentComponent,
-                    "Login failed.",
-                    "Fail",
-                    JOptionPane.ERROR_MESSAGE
-            );
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(
-                    parentComponent,
-                    "Login failed.",
-                    "Fail",
-                    JOptionPane.ERROR_MESSAGE
-            );
-            throw new RuntimeException(e);
-        }
-        return false;
     }
 }

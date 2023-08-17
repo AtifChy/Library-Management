@@ -245,6 +245,5 @@ public class BookTab extends JPanel implements KeyListener, ActionListener {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
     }
 }
