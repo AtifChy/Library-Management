@@ -3,6 +3,7 @@ package Extra;
 import Frame.LoginFrame;
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -194,11 +195,31 @@ public class Account {
                     return true;
                 } else if (data[1].equals(name) && data[3].equals("NO_PASSWORD_SET")) {
                     JPanel addPassword = new JPanel();
+                    addPassword.setPreferredSize(new Dimension(300, 170));
 
                     JLabel newPassLabel = new JLabel("Enter New Password");
-                    JPasswordField newPassField = new JPasswordField(20);
+                    newPassLabel.setPreferredSize(new Dimension(250, 20));
+                    newPassLabel.setFont(Utils.NORMAL_FONT);
+
+                    JPasswordField newPassField = new JPasswordField();
+                    newPassField.setPreferredSize(new Dimension(250, 50));
+                    newPassField.setFont(Utils.NORMAL_FONT);
+                    newPassField.setBorder(BorderFactory.createCompoundBorder(
+                            BorderFactory.createMatteBorder(0, 0, 1, 0, Utils.BLUE),
+                            BorderFactory.createEmptyBorder(0, 5, 0, 5)
+                    ));
+
                     JLabel confirmPassLabel = new JLabel("Confirm Password");
-                    JPasswordField confirmPassField = new JPasswordField(20);
+                    confirmPassLabel.setPreferredSize(new Dimension(250, 20));
+                    confirmPassLabel.setFont(Utils.NORMAL_FONT);
+
+                    JPasswordField confirmPassField = new JPasswordField();
+                    confirmPassField.setPreferredSize(new Dimension(250, 50));
+                    confirmPassField.setFont(Utils.NORMAL_FONT);
+                    confirmPassField.setBorder(BorderFactory.createCompoundBorder(
+                            BorderFactory.createMatteBorder(0, 0, 1, 0, Utils.BLUE),
+                            BorderFactory.createEmptyBorder(0, 5, 0, 5)
+                    ));
 
                     addPassword.add(newPassLabel);
                     addPassword.add(newPassField);
@@ -315,15 +336,15 @@ public class Account {
         }
     }
 
+
+    // Get count of available student accounts
     public int accountCount() {
         int count = 0;
         try {
             reader = new BufferedReader(new FileReader("src/data/student.txt"));
             String line;
             while ((line = reader.readLine()) != null) {
-                if (line.contains("ID: ")) {
-                    count++;
-                }
+                count++;
             }
         } catch (IOException e) {
             throw new RuntimeException(e);

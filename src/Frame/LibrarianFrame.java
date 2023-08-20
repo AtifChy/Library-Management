@@ -1,10 +1,7 @@
 package Frame;
 
 import Extra.Utils;
-import Frame.Panel.AccountTab;
-import Frame.Panel.BookTab;
-import Frame.Panel.HomeAdminTab;
-import Frame.Panel.HomeTab;
+import Frame.Panel.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,6 +14,7 @@ public class LibrarianFrame extends JFrame implements MouseListener {
     private final JButton bookButton;
     private final JButton accountButton;
     private final JButton logoutButton;
+    private final JButton profileButton;
     private LoginFrame loginFrame;
 
     public LibrarianFrame(String name, String userType) {
@@ -26,6 +24,7 @@ public class LibrarianFrame extends JFrame implements MouseListener {
         this.setSize(1260, 800);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null);
+        this.setResizable(false);
         this.setLayout(new BorderLayout());
 
         JPanel leftPanel = new JPanel();
@@ -34,45 +33,67 @@ public class LibrarianFrame extends JFrame implements MouseListener {
         leftPanel.setBackground(Utils.BACKGROUND_COLOR);
 
         JLabel titleLabel = new JLabel("LibraTrack");
-        titleLabel.setFont(Utils.BIG_BOLD_FONT);
-        titleLabel.setPreferredSize(new Dimension(300, 200));
+        titleLabel.setFont(Utils.TITLE_FONT);
+        titleLabel.setPreferredSize(new Dimension(300, 120));
         titleLabel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
 
         JPanel tabPanel = new JPanel();
-        tabPanel.setLayout(new GridLayout(7, 1, 5, 0));
+        tabPanel.setLayout(new GridLayout(8, 1, 5, 0));
         tabPanel.setPreferredSize(new Dimension(300, 500));
+        tabPanel.setBackground(Utils.BACKGROUND_COLOR);
 
         homeButton = new JButton("Home");
         homeButton.setFont(Utils.NORMAL_BOLD_FONT);
         homeButton.setBackground(Utils.LIGHT_BLUE);
         homeButton.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createMatteBorder(0, 5, 0, 0, Utils.BLUE),
-                BorderFactory.createEmptyBorder(0, 0, 0, 0)
+                BorderFactory.createEmptyBorder(0, -5, 0, 0)
         ));
+        homeButton.setFocusPainted(false);
         homeButton.addMouseListener(this);
+
         bookButton = new JButton("Books");
         bookButton.setFont(Utils.NORMAL_BOLD_FONT);
         bookButton.setBackground(Utils.LIGHTER_BLUE);
+        bookButton.setFocusPainted(false);
         bookButton.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
         bookButton.addMouseListener(this);
+
         accountButton = new JButton("Account");
         accountButton.setFont(Utils.NORMAL_BOLD_FONT);
         accountButton.setBackground(Utils.LIGHTER_BLUE);
+        accountButton.setFocusPainted(false);
         accountButton.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
         accountButton.addMouseListener(this);
+
+        profileButton = new JButton("Profile");
+        profileButton.setFont(Utils.NORMAL_BOLD_FONT);
+        profileButton.setBackground(Utils.LIGHTER_BLUE);
+        profileButton.setFocusPainted(false);
+        profileButton.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        profileButton.addMouseListener(this);
+
         logoutButton = new JButton("Log Out");
         logoutButton.setFont(Utils.NORMAL_BOLD_FONT);
-        logoutButton.setBackground(Utils.LIGHTER_BLUE);
+        logoutButton.setBackground(Utils.LIGHTER_RED);
+        logoutButton.setFocusPainted(false);
         logoutButton.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        logoutButton.setPreferredSize(new Dimension(300, 60));
         logoutButton.addMouseListener(this);
 
         tabPanel.add(homeButton);
         tabPanel.add(bookButton);
         tabPanel.add(accountButton);
-        tabPanel.add(logoutButton);
+        tabPanel.add(profileButton);
+
+        JPanel logoutPanel = new JPanel();
+        logoutPanel.setPreferredSize(new Dimension(300, 100));
+        logoutPanel.setBackground(Utils.BACKGROUND_COLOR);
+        logoutPanel.add(logoutButton);
 
         leftPanel.add(titleLabel, BorderLayout.NORTH);
-        leftPanel.add(tabPanel, BorderLayout.SOUTH);
+        leftPanel.add(tabPanel, BorderLayout.CENTER);
+        leftPanel.add(logoutPanel, BorderLayout.SOUTH);
 
         JPanel rightPanel = new JPanel();
         rightPanel.setPreferredSize(new Dimension(940, 800));
@@ -83,12 +104,15 @@ public class LibrarianFrame extends JFrame implements MouseListener {
         BookTab bookTab = new BookTab();
         AccountTab accountTab = new AccountTab();
         HomeAdminTab homeAdminTab = new HomeAdminTab(name, userType);
-        JPanel logoutTab = new JPanel();
+        ProfileTab profileTab = new ProfileTab(name, userType);
+
+        accountTab.setBookTab(bookTab);
+        profileTab.setAccountTab(accountTab);
 
         tabbedPane.add("Home", homeAdminTab);
         tabbedPane.add("Books", bookTab);
         tabbedPane.add("Account", accountTab);
-        tabbedPane.add("Log Out", logoutTab);
+        tabbedPane.add("Profile", profileTab);
 
         rightPanel.add(tabbedPane);
 
@@ -108,12 +132,14 @@ public class LibrarianFrame extends JFrame implements MouseListener {
         bookButton.setBackground(Utils.LIGHTER_BLUE);
         accountButton.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
         accountButton.setBackground(Utils.LIGHTER_BLUE);
+        profileButton.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        profileButton.setBackground(Utils.LIGHTER_BLUE);
         logoutButton.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
-        logoutButton.setBackground(Utils.LIGHTER_BLUE);
+        logoutButton.setBackground(Utils.LIGHTER_RED);
 
         clickedButton.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createMatteBorder(0, 5, 0, 0, Utils.BLUE),
-                BorderFactory.createEmptyBorder(0, 0, 0, 0)
+                BorderFactory.createEmptyBorder(0, -5, 0, 0)
         ));
         clickedButton.setBackground(Utils.LIGHT_BLUE);
 
@@ -123,7 +149,15 @@ public class LibrarianFrame extends JFrame implements MouseListener {
             tabbedPane.setSelectedIndex(1);
         } else if (e.getSource() == accountButton) {
             tabbedPane.setSelectedIndex(2);
+        } else if (e.getSource() == profileButton) {
+            tabbedPane.setSelectedIndex(3);
         } else if (e.getSource() == logoutButton) {
+            logoutButton.setBorder(BorderFactory.createCompoundBorder(
+                    BorderFactory.createMatteBorder(0, 5, 0, 0, Utils.RED),
+                    BorderFactory.createEmptyBorder(0, -5, 0, 0)
+            ));
+            logoutButton.setBackground(Utils.LIGHT_RED);
+
             int answer = JOptionPane.showConfirmDialog(
                     this,
                     "Are you sure you want to log out?",
@@ -139,14 +173,29 @@ public class LibrarianFrame extends JFrame implements MouseListener {
                 loginFrame.setVisible(true);
                 this.dispose();
             } else {
-                tabbedPane.setSelectedIndex(0);
-                homeButton.setBorder(BorderFactory.createCompoundBorder(
-                        BorderFactory.createMatteBorder(0, 5, 0, 0, Utils.BLUE),
-                        BorderFactory.createEmptyBorder(0, 0, 0, 0)
-                ));
-                homeButton.setBackground(Utils.LIGHT_BLUE);
+                int index = tabbedPane.getSelectedIndex();
+                tabbedPane.setSelectedIndex(index);
+
+                JButton selectedButton = null;
+                if (index == 0) {
+                    selectedButton = homeButton;
+                } else if (index == 1) {
+                    selectedButton = bookButton;
+                } else if (index == 2) {
+                    selectedButton = accountButton;
+                } else if (index == 3) {
+                    selectedButton = profileButton;
+                }
+                if (selectedButton != null) {
+                    selectedButton.setBorder(BorderFactory.createCompoundBorder(
+                            BorderFactory.createMatteBorder(0, 5, 0, 0, Utils.BLUE),
+                            BorderFactory.createEmptyBorder(0, 0, 0, 0)
+                    ));
+                    selectedButton.setBackground(Utils.LIGHT_BLUE);
+                }
+
                 logoutButton.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
-                logoutButton.setBackground(Utils.LIGHTER_BLUE);
+                logoutButton.setBackground(Utils.LIGHTER_RED);
             }
         }
     }
@@ -163,11 +212,31 @@ public class LibrarianFrame extends JFrame implements MouseListener {
 
     @Override
     public void mouseEntered(MouseEvent e) {
-
+        if (e.getSource() == homeButton && tabbedPane.getSelectedIndex() != 0) {
+            homeButton.setBackground(Utils.LIGHT_BLUE);
+        } else if (e.getSource() == bookButton && tabbedPane.getSelectedIndex() != 1) {
+            bookButton.setBackground(Utils.LIGHT_BLUE);
+        } else if (e.getSource() == accountButton && tabbedPane.getSelectedIndex() != 2) {
+            accountButton.setBackground(Utils.LIGHT_BLUE);
+        } else if (e.getSource() == profileButton && tabbedPane.getSelectedIndex() != 3) {
+            profileButton.setBackground(Utils.LIGHT_BLUE);
+        } else if (e.getSource() == logoutButton) {
+            logoutButton.setBackground(Utils.LIGHT_RED);
+        }
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-
+        if (e.getSource() == homeButton && tabbedPane.getSelectedIndex() != 0) {
+            homeButton.setBackground(Utils.LIGHTER_BLUE);
+        } else if (e.getSource() == bookButton && tabbedPane.getSelectedIndex() != 1) {
+            bookButton.setBackground(Utils.LIGHTER_BLUE);
+        } else if (e.getSource() == accountButton && tabbedPane.getSelectedIndex() != 2) {
+            accountButton.setBackground(Utils.LIGHTER_BLUE);
+        } else if (e.getSource() == profileButton && tabbedPane.getSelectedIndex() != 3) {
+            profileButton.setBackground(Utils.LIGHTER_BLUE);
+        } else if (e.getSource() == logoutButton) {
+            logoutButton.setBackground(Utils.LIGHTER_RED);
+        }
     }
 }

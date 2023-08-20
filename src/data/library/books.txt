@@ -1,4 +1,7 @@
 1,c++,akib,redhat,3,2,2023-08-14
-2,c#,akib,redhat,3,3,2023-08-14
-3,ruby,sifat,ironheart,10,9,2023-08-15
-4,python,sifat,aiub,15,15,2023-08-16
+2,c#,akib,redhat,3,5,2023-08-14
+3,ruby,sifat,ironheart,15,14,2023-08-15
+4,python,sifat,aiub,15,13,2023-08-16
+5,java,atif,sunshine,15,2,2023-08-17
+6,bash,jackson,absorb,6,6,2023-08-19
+7,c,dennis,ironheart,15,15,2023-08-19

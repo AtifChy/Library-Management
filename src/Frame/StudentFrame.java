@@ -81,7 +81,7 @@ public class StudentFrame extends JFrame implements ActionListener, MouseListene
         tabPanel.add(homeButton);
         tabPanel.add(borrowButton);
         tabPanel.add(returnButton);
-        // tabPanel.add(profileButton);
+        tabPanel.add(profileButton);
         tabPanel.add(logoutButton);
 
         leftPanel.add(titleLabel, BorderLayout.NORTH);
@@ -95,7 +95,7 @@ public class StudentFrame extends JFrame implements ActionListener, MouseListene
 
         borrowTab = new BorrowTab(name);
         returnTab = new ReturnTab(name);
-        profileTab = new ProfileTab();
+        profileTab = new ProfileTab(name, userType);
         JPanel logoutTab = new JPanel();
         homeTab = new HomeTab(borrowTab, returnTab, name, userType);
 
