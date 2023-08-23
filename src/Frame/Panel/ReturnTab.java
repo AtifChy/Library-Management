@@ -7,43 +7,53 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ReturnTab extends JPanel implements ActionListener, KeyListener {
+public class ReturnTab extends JPanel implements KeyListener, MouseListener {
     private final JButton returnAddButton;
     private final JTable returnTable;
     private final JTextField searchField;
     private final DefaultTableModel returnTableModel;
     private final String name;
-    private String returnPath;
-    private String borrowPath;
     private HomeTab homeTab;
     private BorrowTab borrowTab;
 
     public ReturnTab(String name) {
-        this.setLayout(new BorderLayout());
+        this.setLayout(new FlowLayout());
 
         JPanel topPanel = new JPanel();
         topPanel.setLayout(new FlowLayout());
-        topPanel.setPreferredSize(new Dimension(940, 100));
+        topPanel.setPreferredSize(new Dimension(940, 150));
+        topPanel.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
 
         JLabel returnLabel = new JLabel("Return Books");
-        returnLabel.setFont(Utils.BIG_BOLD_FONT);
+        returnLabel.setFont(Utils.TITLE_FONT);
         topPanel.add(returnLabel);
+
+        JPanel searchPanel = new JPanel();
+        searchPanel.setPreferredSize(new Dimension(940, 80));
+        searchPanel.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
+
+        ImageIcon searchIcon = new ImageIcon("src/images/search.png");
+        JLabel iconLabel = new JLabel(searchIcon);
+        iconLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 10));
+        searchPanel.add(iconLabel);
 
         searchField = new JTextField();
         searchField.setFont(Utils.BIG_FONT);
-        searchField.setPreferredSize(new Dimension(300, 60));
+        searchField.setPreferredSize(new Dimension(300, 50));
+        searchField.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createMatteBorder(0, 0, 1, 0, Utils.BLUE),
+                BorderFactory.createEmptyBorder(0, 5, 0, 0)
+        ));
         searchField.addKeyListener(this);
-        topPanel.add(searchField);
+        searchPanel.add(searchField);
 
-        this.add(topPanel, BorderLayout.NORTH);
+        topPanel.add(searchPanel);
+        this.add(topPanel);
 
 
         String[] columnTitle = {"ID", "Name", "Author", "Publisher", "Return Date"};
@@ -79,7 +89,7 @@ public class ReturnTab extends JPanel implements ActionListener, KeyListener {
         returnTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         JTableHeader tableHeader = new JTableHeader(returnTable.getColumnModel());
-        tableHeader.setFont(Utils.SMALL_FONT);
+        tableHeader.setFont(Utils.NORMAL_FONT);
         tableHeader.setPreferredSize(new Dimension(tableHeader.getWidth(), 40));
         returnTable.setTableHeader(tableHeader);
 
@@ -92,14 +102,23 @@ public class ReturnTab extends JPanel implements ActionListener, KeyListener {
         }
 
         JScrollPane returnPane = new JScrollPane(returnTable);
-        returnPane.setPreferredSize(new Dimension(500, 300));
-        this.add(returnPane, BorderLayout.CENTER);
+        returnPane.setPreferredSize(new Dimension(700, 400));
+        returnPane.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createEmptyBorder(20, 0, 0, 0),
+                BorderFactory.createMatteBorder(1, 1, 1, 1, Color.GRAY)
+        ));
+        this.add(returnPane);
 
         JPanel returnAdd = new JPanel();
         returnAdd.setPreferredSize(new Dimension(940, 200));
+        returnAdd.setBorder(BorderFactory.createEmptyBorder(50, 0, 0, 0));
+
         returnAddButton = new JButton("Return Book");
         returnAddButton.setFont(Utils.BIG_BOLD_FONT);
-        returnAddButton.addActionListener(this);
+        returnAddButton.setPreferredSize(new Dimension(200, 60));
+        returnAddButton.setFocusable(false);
+        returnAddButton.addMouseListener(this);
+
         returnAdd.add(returnAddButton);
         this.add(returnAdd, BorderLayout.SOUTH);
 
@@ -144,13 +163,30 @@ public class ReturnTab extends JPanel implements ActionListener, KeyListener {
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void keyTyped(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(returnTableModel);
+        returnTable.setRowSorter(sorter);
+        sorter.setRowFilter(RowFilter.regexFilter(searchField.getText()));
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
         if (e.getSource() == returnAddButton) {
-            borrowPath = "src/data/library/books.txt";
-            returnPath = "src/data/library/" + name + "_return.txt";
+            String borrowPath = "src/data/library/books.txt";
+            String returnPath = "src/data/library/" + name + "_return.txt";
 
             int selectedRow = returnTable.getSelectedRow();
-            if (selectedRow != -1) {
+            if (selectedRow >= 0) {
                 int idColumnIndex = returnTableModel.findColumn("ID");
                 int id = Integer.parseInt(returnTableModel.getValueAt(selectedRow, idColumnIndex).toString());
 
@@ -218,19 +254,22 @@ public class ReturnTab extends JPanel implements ActionListener, KeyListener {
     }
 
     @Override
-    public void keyTyped(KeyEvent e) {
+    public void mousePressed(MouseEvent e) {
 
     }
 
     @Override
-    public void keyPressed(KeyEvent e) {
+    public void mouseReleased(MouseEvent e) {
 
     }
 
     @Override
-    public void keyReleased(KeyEvent e) {
-        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(returnTableModel);
-        returnTable.setRowSorter(sorter);
-        sorter.setRowFilter(RowFilter.regexFilter(searchField.getText()));
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+
     }
 }

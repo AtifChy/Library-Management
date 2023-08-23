@@ -169,8 +169,6 @@ public class LibrarianFrame extends JFrame implements MouseListener {
             );
 
             if (answer == JOptionPane.YES_OPTION) {
-                // tabbedPane.setSelectedIndex(3);
-
                 File rememberFile = new File("src/data/remember.txt");
                 try {
                     FileWriter writer = new FileWriter(rememberFile);

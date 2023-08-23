@@ -7,45 +7,55 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.*;
 import java.io.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BorrowTab extends JPanel implements ActionListener, KeyListener {
+public class BorrowTab extends JPanel implements KeyListener, MouseListener {
     private final DefaultTableModel borrowTableModel;
     private final JButton borrowAddButton;
     private final JTable borrowTable;
-    private String borrowPath;
-    private String returnPath;
     private final String name;
     private HomeTab homeTab;
     private ReturnTab returnTab;
     private final JTextField searchField;
 
     public BorrowTab(String name) {
-        this.setLayout(new BorderLayout());
+        this.setLayout(new FlowLayout());
 
         JPanel topPanel = new JPanel();
         topPanel.setLayout(new FlowLayout());
-        topPanel.setPreferredSize(new Dimension(940, 100));
+        topPanel.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
+        topPanel.setPreferredSize(new Dimension(940, 150));
 
         JLabel borrowLabel = new JLabel("Borrow Books");
-        borrowLabel.setFont(Utils.BIG_BOLD_FONT);
+        borrowLabel.setFont(Utils.TITLE_FONT);
         topPanel.add(borrowLabel);
+
+        JPanel searchPanel = new JPanel();
+        searchPanel.setPreferredSize(new Dimension(940, 80));
+        searchPanel.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
+
+        ImageIcon searchIcon = new ImageIcon("src/images/search.png");
+        JLabel iconLabel = new JLabel(searchIcon);
+        iconLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 10));
+        searchPanel.add(iconLabel);
 
         searchField = new JTextField();
         searchField.setFont(Utils.BIG_FONT);
-        searchField.setPreferredSize(new Dimension(300, 60));
+        searchField.setPreferredSize(new Dimension(300, 50));
+        searchField.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createMatteBorder(0, 0, 1, 0, Utils.BLUE),
+                BorderFactory.createEmptyBorder(0, 5, 0, 0)
+        ));
         searchField.addKeyListener(this);
-        topPanel.add(searchField);
+        searchPanel.add(searchField);
+        topPanel.add(searchPanel);
 
-        this.add(topPanel, BorderLayout.NORTH);
+        this.add(topPanel);
 
         String[] columnTitles = {"ID", "Title", "Author", "Publisher", "Quantity", "Available", "Added dates"};
 
@@ -73,29 +83,38 @@ public class BorrowTab extends JPanel implements ActionListener, KeyListener {
         borrowTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         JTableHeader tableHeader = new JTableHeader(borrowTable.getColumnModel());
-        tableHeader.setFont(Utils.SMALL_FONT);
+        tableHeader.setFont(Utils.NORMAL_FONT);
         tableHeader.setPreferredSize(new Dimension(tableHeader.getWidth(), 40));
         borrowTable.setTableHeader(tableHeader);
 
         int rowHeight = 30;
         borrowTable.setRowHeight(rowHeight);
 
-        int[] columnWidths = {50, 100, 150, 150, 80, 80, 120};
+        int[] columnWidths = {50, 100, 135, 135, 95, 95, 120};
         for (int i = 0; i < columnWidths.length; i++) {
             borrowTable.getColumnModel().getColumn(i).setPreferredWidth(columnWidths[i]);
         }
 
         JScrollPane borrowPane = new JScrollPane(borrowTable);
-        borrowPane.setPreferredSize(new Dimension(600, 300));
-        this.add(borrowPane, BorderLayout.CENTER);
+        borrowPane.setPreferredSize(new Dimension(700, 400));
+        borrowPane.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createEmptyBorder(20, 0, 0, 0),
+                BorderFactory.createMatteBorder(1, 1, 1, 1, Color.GRAY)
+        ));
+        this.add(borrowPane);
 
         JPanel borrowAdd = new JPanel();
         borrowAdd.setPreferredSize(new Dimension(940, 200));
+        borrowAdd.setBorder(BorderFactory.createEmptyBorder(50, 0, 0, 0));
+
         borrowAddButton = new JButton("Borrow Book");
         borrowAddButton.setFont(Utils.BIG_BOLD_FONT);
-        borrowAddButton.addActionListener(this);
+        borrowAddButton.setPreferredSize(new Dimension(200, 60));
+        borrowAddButton.setFocusable(false);
+        borrowAddButton.addMouseListener(this);
+
         borrowAdd.add(borrowAddButton);
-        this.add(borrowAdd, BorderLayout.SOUTH);
+        this.add(borrowAdd);
 
         this.name = name;
     }
@@ -115,22 +134,17 @@ public class BorrowTab extends JPanel implements ActionListener, KeyListener {
         File borrowFile = new File(borrowPath);
 
         try {
-            if (!borrowFile.getParentFile().exists()) {
-                borrowFile.getParentFile().mkdir();
-                borrowFile.createNewFile();
-            } else if (!borrowFile.exists()) {
-                borrowFile.createNewFile();
-            }
             BufferedReader reader = new BufferedReader(new FileReader(borrowFile));
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] rowData = line.split(",");
                 borrowTableModel.addRow(rowData);
             }
+
+            System.out.println("Borrow Tab updated.");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        System.out.println("Borrow Tab updated.");
     }
 
     public int getTotalBookCount() {
@@ -158,13 +172,30 @@ public class BorrowTab extends JPanel implements ActionListener, KeyListener {
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void keyTyped(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(borrowTableModel);
+        borrowTable.setRowSorter(sorter);
+        sorter.setRowFilter(RowFilter.regexFilter(searchField.getText()));
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
         if (e.getSource() == borrowAddButton) {
-            borrowPath = "src/data/library/books.txt";
-            returnPath = "src/data/library/" + name + "_return.txt";
+            String borrowPath = "src/data/library/books.txt";
+            String returnPath = "src/data/library/" + name + "_return.txt";
 
             int selectedRow = borrowTable.getSelectedRow();
-            if (selectedRow != -1) {
+            if (selectedRow >= 0) {
                 int issuedColumnIndex = borrowTableModel.findColumn("Available");
                 int issuedCount = Integer.parseInt(borrowTableModel.getValueAt(selectedRow, issuedColumnIndex).toString());
 
@@ -231,26 +262,34 @@ public class BorrowTab extends JPanel implements ActionListener, KeyListener {
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
+            } else {
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Please select a book to borrow.",
+                        "No book selected",
+                        JOptionPane.WARNING_MESSAGE
+                );
             }
-        } else {
-
         }
     }
 
     @Override
-    public void keyTyped(KeyEvent e) {
+    public void mousePressed(MouseEvent e) {
 
     }
 
     @Override
-    public void keyPressed(KeyEvent e) {
+    public void mouseReleased(MouseEvent e) {
 
     }
 
     @Override
-    public void keyReleased(KeyEvent e) {
-        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(borrowTableModel);
-        borrowTable.setRowSorter(sorter);
-        sorter.setRowFilter(RowFilter.regexFilter(searchField.getText()));
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+
     }
 }

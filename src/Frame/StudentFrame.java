@@ -20,10 +20,6 @@ public class StudentFrame extends JFrame implements ActionListener, MouseListene
     private final JButton returnButton;
     private final JButton profileButton;
     private final JButton logoutButton;
-    private final HomeTab homeTab;
-    private final BorrowTab borrowTab;
-    private final ReturnTab returnTab;
-    private final ProfileTab profileTab;
     private LoginFrame loginFrame;
 
     public StudentFrame(String name, String userType) {
@@ -33,6 +29,7 @@ public class StudentFrame extends JFrame implements ActionListener, MouseListene
         this.setSize(1260, 800);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null);
+        this.setResizable(false);
         this.setLayout(new BorderLayout());
 
         JPanel leftPanel = new JPanel();
@@ -41,13 +38,14 @@ public class StudentFrame extends JFrame implements ActionListener, MouseListene
         leftPanel.setBackground(Utils.BACKGROUND_COLOR);
 
         JLabel titleLabel = new JLabel("LibraTrack");
-        titleLabel.setFont(Utils.BIG_BOLD_FONT);
-        titleLabel.setPreferredSize(new Dimension(300, 200));
+        titleLabel.setFont(Utils.TITLE_FONT);
+        titleLabel.setPreferredSize(new Dimension(300, 120));
         titleLabel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
 
         JPanel tabPanel = new JPanel();
-        tabPanel.setLayout(new GridLayout(7, 1, 5, 0));
+        tabPanel.setLayout(new GridLayout(8, 1, 5, 0));
         tabPanel.setPreferredSize(new Dimension(300, 500));
+        tabPanel.setBackground(Utils.BACKGROUND_COLOR);
 
         homeButton = new JButton("Home");
         homeButton.setFont(Utils.NORMAL_BOLD_FONT);
@@ -56,36 +54,51 @@ public class StudentFrame extends JFrame implements ActionListener, MouseListene
                 BorderFactory.createMatteBorder(0, 5, 0, 0, Utils.BLUE),
                 BorderFactory.createEmptyBorder(0, 0, 0, 0)
         ));
+        homeButton.setFocusPainted(false);
         homeButton.addMouseListener(this);
+
         borrowButton = new JButton("Borrow");
         borrowButton.setFont(Utils.NORMAL_BOLD_FONT);
         borrowButton.setBackground(Utils.LIGHTER_BLUE);
         borrowButton.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        borrowButton.setFocusPainted(false);
         borrowButton.addMouseListener(this);
+
         returnButton = new JButton("Return");
         returnButton.setFont(Utils.NORMAL_BOLD_FONT);
         returnButton.setBackground(Utils.LIGHTER_BLUE);
         returnButton.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        returnButton.setFocusPainted(false);
         returnButton.addMouseListener(this);
+
         profileButton = new JButton("Profile");
         profileButton.setFont(Utils.NORMAL_BOLD_FONT);
         profileButton.setBackground(Utils.LIGHTER_BLUE);
         profileButton.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        profileButton.setFocusPainted(false);
         profileButton.addMouseListener(this);
+
         logoutButton = new JButton("Log Out");
         logoutButton.setFont(Utils.NORMAL_BOLD_FONT);
-        logoutButton.setBackground(Utils.LIGHTER_BLUE);
+        logoutButton.setBackground(Utils.LIGHTER_RED);
         logoutButton.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        logoutButton.setPreferredSize(new Dimension(300, 60));
+        logoutButton.setFocusPainted(false);
         logoutButton.addMouseListener(this);
 
         tabPanel.add(homeButton);
         tabPanel.add(borrowButton);
         tabPanel.add(returnButton);
         tabPanel.add(profileButton);
-        tabPanel.add(logoutButton);
+
+        JPanel logoutPanel = new JPanel();
+        logoutPanel.setPreferredSize(new Dimension(300, 100));
+        logoutPanel.setBackground(Utils.BACKGROUND_COLOR);
+        logoutPanel.add(logoutButton);
 
         leftPanel.add(titleLabel, BorderLayout.NORTH);
-        leftPanel.add(tabPanel, BorderLayout.SOUTH);
+        leftPanel.add(tabPanel, BorderLayout.CENTER);
+        leftPanel.add(logoutPanel, BorderLayout.SOUTH);
 
         JPanel rightPanel = new JPanel();
         rightPanel.setPreferredSize(new Dimension(940, 800));
@@ -93,11 +106,10 @@ public class StudentFrame extends JFrame implements ActionListener, MouseListene
         tabbedPane = new JTabbedPane();
         tabbedPane.setBounds(-2, -25, 944, 825);
 
-        borrowTab = new BorrowTab(name);
-        returnTab = new ReturnTab(name);
-        profileTab = new ProfileTab(name, userType);
-        JPanel logoutTab = new JPanel();
-        homeTab = new HomeTab(borrowTab, returnTab, name, userType);
+        BorrowTab borrowTab = new BorrowTab(name);
+        ReturnTab returnTab = new ReturnTab(name);
+        ProfileTab profileTab = new ProfileTab(name, userType);
+        HomeTab homeTab = new HomeTab(borrowTab, returnTab, name, userType);
 
         borrowTab.setHomeTab(homeTab);
         borrowTab.setReturnTab(returnTab);
@@ -108,7 +120,6 @@ public class StudentFrame extends JFrame implements ActionListener, MouseListene
         tabbedPane.add("Borrow", borrowTab);
         tabbedPane.add("Return", returnTab);
         tabbedPane.add("Profile", profileTab);
-        tabbedPane.add("Log Out", logoutTab);
 
         rightPanel.add(tabbedPane);
 
@@ -136,11 +147,11 @@ public class StudentFrame extends JFrame implements ActionListener, MouseListene
         profileButton.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
         profileButton.setBackground(Utils.LIGHTER_BLUE);
         logoutButton.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
-        logoutButton.setBackground(Utils.LIGHTER_BLUE);
+        logoutButton.setBackground(Utils.LIGHTER_RED);
 
         clickedButton.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createMatteBorder(0, 5, 0, 0, Utils.BLUE),
-                BorderFactory.createEmptyBorder(0, 0, 0, 0)
+                BorderFactory.createEmptyBorder(0, -5, 0, 0)
         ));
         clickedButton.setBackground(Utils.LIGHT_BLUE);
 
@@ -153,6 +164,12 @@ public class StudentFrame extends JFrame implements ActionListener, MouseListene
         } else if (e.getSource() == profileButton) {
             tabbedPane.setSelectedIndex(3);
         } else if (e.getSource() == logoutButton) {
+            logoutButton.setBorder(BorderFactory.createCompoundBorder(
+                    BorderFactory.createMatteBorder(0, 5, 0, 0, Utils.RED),
+                    BorderFactory.createEmptyBorder(0, -5, 0, 0)
+            ));
+            logoutButton.setBackground(Utils.LIGHT_RED);
+
             int answer = JOptionPane.showConfirmDialog(
                     this,
                     "Are you sure you want to log out?",
@@ -161,21 +178,35 @@ public class StudentFrame extends JFrame implements ActionListener, MouseListene
             );
 
             if (answer == JOptionPane.YES_OPTION) {
-                tabbedPane.setSelectedIndex(4);
                 if (loginFrame == null) {
                     loginFrame = new LoginFrame();
                 }
                 loginFrame.setVisible(true);
                 this.dispose();
             } else {
-                tabbedPane.setSelectedIndex(0);
-                homeButton.setBorder(BorderFactory.createCompoundBorder(
-                        BorderFactory.createMatteBorder(0, 5, 0, 0, Utils.BLUE),
-                        BorderFactory.createEmptyBorder(0, 0, 0, 0)
-                ));
-                homeButton.setBackground(Utils.LIGHT_BLUE);
+                int index = tabbedPane.getSelectedIndex();
+                tabbedPane.setSelectedIndex(index);
+
+                JButton selectedButton = null;
+                if (index == 0) {
+                    selectedButton = homeButton;
+                } else if (index == 1) {
+                    selectedButton = borrowButton;
+                } else if (index == 2) {
+                    selectedButton = returnButton;
+                } else if (index == 3) {
+                    selectedButton = profileButton;
+                }
+                if (selectedButton != null) {
+                    selectedButton.setBorder(BorderFactory.createCompoundBorder(
+                            BorderFactory.createMatteBorder(0, 5, 0, 0, Utils.BLUE),
+                            BorderFactory.createEmptyBorder(0, 0, 0, 0)
+                    ));
+                    selectedButton.setBackground(Utils.LIGHT_BLUE);
+                }
+
                 logoutButton.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
-                logoutButton.setBackground(Utils.LIGHTER_BLUE);
+                logoutButton.setBackground(Utils.LIGHTER_RED);
             }
         }
     }

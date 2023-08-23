@@ -16,8 +16,8 @@ public class HomeTab extends JPanel {
         this.setLayout(new BorderLayout());
         JPanel userPanel = new JPanel();
         userPanel.setLayout(new BoxLayout(userPanel, BoxLayout.Y_AXIS));
-        userPanel.setPreferredSize(new Dimension(940, 340));
-        userPanel.setBackground(Color.LIGHT_GRAY);
+        userPanel.setPreferredSize(new Dimension(940, 300));
+        userPanel.setBackground(Color.WHITE);
 
         Component padding = Box.createRigidArea(new Dimension(0, 50));
         userPanel.add(padding);
@@ -41,7 +41,7 @@ public class HomeTab extends JPanel {
         aboutPanel.setLayout(new GridLayout(2, 3, 50, 0));
         aboutPanel.setPreferredSize(new Dimension(940, 400));
         aboutPanel.setBorder(BorderFactory.createEmptyBorder(70, 90, 70, 90));
-        aboutPanel.setBackground(Utils.LIGHT_BLUE);
+        aboutPanel.setBackground(Color.WHITE);
 
         JLabel totalBookLabel = new JLabel("Number of Books");
         totalBookLabel.setFont(Utils.NORMAL_BOLD_FONT);
@@ -57,7 +57,7 @@ public class HomeTab extends JPanel {
 
         JPanel totalBookPanel = new JPanel();
         totalBookPanel.setLayout(new BoxLayout(totalBookPanel, BoxLayout.X_AXIS));
-        totalBookPanel.setBackground(Color.LIGHT_GRAY);
+        totalBookPanel.setBackground(Utils.LIGHTER_BLUE);
         totalBookPanel.setBorder(BorderFactory.createMatteBorder(10, 0, 0, 0, Utils.BLUE));
         totalBook = new JLabel(String.valueOf(borrowTab.getTotalBookCount()));
         totalBook.setFont(Utils.HUGE_FONT);
@@ -68,7 +68,7 @@ public class HomeTab extends JPanel {
 
         JPanel availBookPanel = new JPanel();
         availBookPanel.setLayout(new BoxLayout(availBookPanel, BoxLayout.X_AXIS));
-        availBookPanel.setBackground(Color.LIGHT_GRAY);
+        availBookPanel.setBackground(Utils.LIGHTER_BLUE);
         availBookPanel.setBorder(BorderFactory.createMatteBorder(10, 0, 0, 0, Utils.BLUE));
         availBook = new JLabel(String.valueOf(borrowTab.getAvailableBooKCount()));
         availBook.setFont(Utils.HUGE_FONT);
@@ -79,7 +79,7 @@ public class HomeTab extends JPanel {
 
         JPanel returnBookPanel = new JPanel();
         returnBookPanel.setLayout(new BoxLayout(returnBookPanel, BoxLayout.X_AXIS));
-        returnBookPanel.setBackground(Color.LIGHT_GRAY);
+        returnBookPanel.setBackground(Utils.LIGHTER_BLUE);
         returnBookPanel.setBorder(BorderFactory.createMatteBorder(10, 0, 0, 0, Utils.BLUE));
         returnBook = new JLabel(String.valueOf(returnTab.getReturnTableRowCount()));
         returnBook.setFont(Utils.HUGE_FONT);
