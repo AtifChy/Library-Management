@@ -7,6 +7,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class LibrarianFrame extends JFrame implements MouseListener {
     private final JTabbedPane tabbedPane;
@@ -167,6 +170,17 @@ public class LibrarianFrame extends JFrame implements MouseListener {
 
             if (answer == JOptionPane.YES_OPTION) {
                 // tabbedPane.setSelectedIndex(3);
+
+                File rememberFile = new File("src/data/remember.txt");
+                try {
+                    FileWriter writer = new FileWriter(rememberFile);
+                    writer.write("");
+                    writer.flush();
+                    writer.close();
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+
                 if (loginFrame == null) {
                     loginFrame = new LoginFrame();
                 }

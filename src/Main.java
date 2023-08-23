@@ -1,18 +1,25 @@
 import Frame.LoginFrame;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.io.*;
 
 public class Main {
     public static void main(String[] args) {
-        new LoginFrame();
-        /*
-        LocalDateTime rawDateTime = LocalDateTime.now();
-        System.out.println(rawDateTime);
+        File file = new File("src/data/remember.txt");
+        String line = null;
+        try {
+            file.createNewFile();
+            BufferedReader reader = new BufferedReader(new FileReader(file));
+            line = reader.readLine();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mma");
-        String formattedDateTime = rawDateTime.format(formatter);
-        System.out.println(formattedDateTime);
-        */
+        if (!file.exists() || line == null) {
+            new LoginFrame();
+        } else {
+            String[] data;
+            data = line.split(",");
+            new LoginFrame(data[0], data[1], data[2]);
+        }
     }
 }

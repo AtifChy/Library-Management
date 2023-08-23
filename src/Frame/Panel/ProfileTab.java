@@ -23,6 +23,12 @@ public class ProfileTab extends JPanel implements MouseListener {
     private AccountTab accountTab;
 
     public ProfileTab(String name, String userType) {
+        this();
+        this.name = name;
+        this.userType = userType;
+    }
+
+    public ProfileTab() {
         this.setLayout(new BorderLayout());
         this.setPreferredSize(new Dimension(940, 700));
 
@@ -147,9 +153,6 @@ public class ProfileTab extends JPanel implements MouseListener {
         bottomPanel.add(saveButton);
 
         this.add(bottomPanel, BorderLayout.SOUTH);
-
-        this.name = name;
-        this.userType = userType;
     }
 
     public void setAccountTab(AccountTab accountTab) {

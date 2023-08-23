@@ -1,45 +1,29 @@
 package Frame;
 
 import Extra.*;
-import jdk.jshell.execution.Util;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicButtonUI;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.image.BufferedImage;
 import java.io.*;
-import java.nio.Buffer;
 
 
 public class LoginFrame extends JFrame implements MouseListener {
-    private final JPanel loginPanel;
-    private final JPanel imagePanel;
-    private final JPanel introPanel;
-    private final JLabel introLabel;
-    private final JPanel radioPanel;
-    private final ButtonGroup loginGroup;
-    private final JRadioButton librarianButton;
-    private final JRadioButton studentButton;
-    private final JLabel nameLabel;
-    private final JLabel passLabel;
-    private final JTextField nameField;
-    private final JPasswordField passField;
-    private final JToggleButton showHideButton;
-    private final JPanel rememberPanel;
-    private final JCheckBox rememberBox;
-    private final JButton forgotButton;
-    private final JPanel buttonPanel;
-    private final JButton loginButton;
-    private final JLabel signupLabel;
-    private final JButton signupButton;
-    private final JPanel naviPanel;
-    private final JButton backButton;
-    private final ImageIcon showIcon;
-    private final ImageIcon hideIcon;
-    private SignupFrame signupFrame;
-    private ForgotPassFrame forgotPassFrame;
+    private ButtonGroup loginGroup;
+    private JRadioButton librarianButton;
+    private JRadioButton studentButton;
+    private JTextField nameField;
+    private JPasswordField passField;
+    private JToggleButton showHideButton;
+    private JCheckBox rememberBox;
+    private JButton forgotButton;
+    private JButton loginButton;
+    private JButton signupButton;
+    private JButton backButton;
+    private ImageIcon showIcon;
+    private ImageIcon hideIcon;
     private File file;
 
     public LoginFrame() {
@@ -55,27 +39,28 @@ public class LoginFrame extends JFrame implements MouseListener {
         UIManager.put("OptionPane.messageFont", Utils.NORMAL_FONT);
         UIManager.put("OptionPane.buttonFont", Utils.NORMAL_FONT);
 
-        loginPanel = new JPanel();
+        JPanel loginPanel = new JPanel();
         loginPanel.setPreferredSize(new Dimension(560, 700));
         loginPanel.setBackground(Utils.BACKGROUND_COLOR);
 
-        introPanel = new JPanel();
+        JPanel introPanel = new JPanel();
         introPanel.setPreferredSize(new Dimension(560, 130));
         introPanel.setBorder(BorderFactory.createEmptyBorder(60, 0, 20, 0));
         introPanel.setBackground(Utils.BACKGROUND_COLOR);
 
-        introLabel = new JLabel("Welcome");
+        JLabel introLabel = new JLabel("Welcome");
         introLabel.setFont(Utils.INTRO_FONT);
         introPanel.add(introLabel);
         loginPanel.add(introPanel);
 
-        radioPanel = new JPanel();
+        JPanel radioPanel = new JPanel();
         radioPanel.setLayout(new BorderLayout());
         radioPanel.setPreferredSize(new Dimension(200, 30));
         radioPanel.setBackground(Utils.BACKGROUND_COLOR);
 
         ImageIcon checkedIcon = new ImageIcon("src/images/radio_checked.png");
         ImageIcon unCheckedIcon = new ImageIcon("src/images/radio_unchecked.png");
+
         librarianButton = new JRadioButton("Librarian", unCheckedIcon);
         librarianButton.setActionCommand("Librarian");
         librarianButton.setSelectedIcon(checkedIcon);
@@ -83,6 +68,7 @@ public class LoginFrame extends JFrame implements MouseListener {
         librarianButton.setBackground(Utils.BACKGROUND_COLOR);
         librarianButton.setFocusable(false);
         librarianButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
         studentButton = new JRadioButton("Student", unCheckedIcon);
         studentButton.setActionCommand("Student");
         studentButton.setSelectedIcon(checkedIcon);
@@ -100,7 +86,7 @@ public class LoginFrame extends JFrame implements MouseListener {
         radioPanel.add(studentButton, BorderLayout.EAST);
         loginPanel.add(radioPanel);
 
-        nameLabel = new JLabel("User Name");
+        JLabel nameLabel = new JLabel("User Name");
         nameLabel.setFont(Utils.NORMAL_FONT);
         nameLabel.setPreferredSize(new Dimension(420, 28));
         loginPanel.add(nameLabel);
@@ -116,7 +102,7 @@ public class LoginFrame extends JFrame implements MouseListener {
         nameField.setBackground(Utils.BACKGROUND_COLOR);
         loginPanel.add(nameField);
 
-        passLabel = new JLabel("Password");
+        JLabel passLabel = new JLabel("Password");
         passLabel.setFont(Utils.NORMAL_FONT);
         passLabel.setPreferredSize(new Dimension(420, 28));
         loginPanel.add(passLabel);
@@ -148,7 +134,7 @@ public class LoginFrame extends JFrame implements MouseListener {
         showHideButton.addMouseListener(this);
         loginPanel.add(showHideButton);
 
-        rememberPanel = new JPanel();
+        JPanel rememberPanel = new JPanel();
         rememberPanel.setLayout(new BorderLayout());
         rememberPanel.setPreferredSize(new Dimension(420, 40));
         rememberPanel.setBackground(Utils.BACKGROUND_COLOR);
@@ -159,6 +145,7 @@ public class LoginFrame extends JFrame implements MouseListener {
         rememberBox.setSelectedIcon(new ImageIcon("src/images/checkbox_selected.png"));
         rememberBox.setFont(Utils.SMALL_FONT);
         rememberBox.setBackground(Utils.BACKGROUND_COLOR);
+        rememberBox.setSelected(false);
         rememberBox.setCursor(new Cursor(Cursor.HAND_CURSOR));
         rememberPanel.add(rememberBox, BorderLayout.WEST);
 
@@ -180,7 +167,7 @@ public class LoginFrame extends JFrame implements MouseListener {
 
         loginPanel.add(rememberPanel);
 
-        buttonPanel = new JPanel();
+        JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new GridLayout(1, 1));
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(45, 0, 35, 0));
         buttonPanel.setPreferredSize(new Dimension(420, 140));
@@ -194,7 +181,7 @@ public class LoginFrame extends JFrame implements MouseListener {
         buttonPanel.add(loginButton);
         loginPanel.add(buttonPanel);
 
-        signupLabel = new JLabel("Don't have an account yet?");
+        JLabel signupLabel = new JLabel("Don't have an account yet?");
         signupLabel.setPreferredSize(new Dimension(210, 50));
         signupLabel.setFont(Utils.NORMAL_FONT);
         loginPanel.add(signupLabel);
@@ -215,11 +202,11 @@ public class LoginFrame extends JFrame implements MouseListener {
         });
         loginPanel.add(signupButton);
 
-        imagePanel = new JPanel();
+        JPanel imagePanel = new JPanel();
         imagePanel.setPreferredSize(new Dimension(700, 700));
         imagePanel.setBackground(Color.WHITE);
 
-        naviPanel = new JPanel();
+        JPanel naviPanel = new JPanel();
         naviPanel.setLayout(new BorderLayout());
         naviPanel.setPreferredSize(new Dimension(700, 60));
         naviPanel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
@@ -247,6 +234,13 @@ public class LoginFrame extends JFrame implements MouseListener {
         this.setVisible(true);
     }
 
+    public LoginFrame(String userType, String name, String password) {
+        UIManager.put("OptionPane.messageFont", Utils.NORMAL_FONT);
+        UIManager.put("OptionPane.buttonFont", Utils.NORMAL_FONT);
+
+        login(userType, name, password);
+    }
+
     @Override
     public void mouseClicked(MouseEvent e) {
         if (e.getSource() == showHideButton) {
@@ -258,7 +252,7 @@ public class LoginFrame extends JFrame implements MouseListener {
                 showHideButton.setIcon(showIcon);
             }
         } else if (e.getSource() == forgotButton) {
-            forgotPassFrame = new ForgotPassFrame();
+            ForgotPassFrame forgotPassFrame = new ForgotPassFrame();
             this.setVisible(false);
             forgotPassFrame.setVisible(true);
         } else if (e.getSource() == loginButton) {
@@ -303,27 +297,55 @@ public class LoginFrame extends JFrame implements MouseListener {
                             JOptionPane.WARNING_MESSAGE
                     );
                 } else {
-                    Account account = new Account(this);
-                    boolean isLoggedIn = account.loginAccount(userType, name, password);
-                    System.out.println(isLoggedIn);
-                    if (isLoggedIn) {
-                        if (userType.equals("Librarian")) {
-                            LibrarianFrame librarianFrame = new LibrarianFrame(name, userType);
-                            librarianFrame.setVisible(true);
-                        } else if (userType.equals("Student")) {
-                            StudentFrame studentFrame = new StudentFrame(name, userType);
-                            studentFrame.setVisible(true);
-                        }
-
-                        this.setVisible(false);
-                        System.out.println("Logged in as \"" + name + " - " + userType + "\"");
-                    }
+                    login(userType, name, password);
                 }
             }
         } else if (e.getSource() == signupButton) {
-            signupFrame = new SignupFrame();
+            SignupFrame signupFrame = new SignupFrame();
             this.setVisible(false);
             signupFrame.setVisible(true);
+        }
+    }
+
+    public void login(String userType, String name, String password) {
+        Account account = new Account(this);
+        boolean isLoggedIn = account.loginAccount(userType, name, password);
+        if (isLoggedIn) {
+            try {
+                rememberMe();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+
+            if (userType.equals("Librarian")) {
+                LibrarianFrame librarianFrame = new LibrarianFrame(name, userType);
+                librarianFrame.setVisible(true);
+            } else if (userType.equals("Student")) {
+                StudentFrame studentFrame = new StudentFrame(name, userType);
+                studentFrame.setVisible(true);
+            }
+
+            this.setVisible(false);
+            System.out.println("Logged in as \"" + name + " - " + userType + "\"");
+        }
+    }
+
+    public void rememberMe() throws IOException {
+        if (this.rememberBox != null && this.rememberBox.isSelected()) {
+            String userType = loginGroup.getSelection().getActionCommand();
+            String name = nameField.getText();
+            String password = String.valueOf(passField.getPassword());
+
+            File rememberFile = new File("src/data/remember.txt");
+            if (!rememberFile.exists()) {
+                rememberFile.createNewFile();
+            }
+
+            String rememberData = userType + "," + name + "," + password;
+            BufferedWriter writer = new BufferedWriter(new FileWriter(rememberFile));
+            writer.write(rememberData);
+            writer.flush();
+            writer.close();
         }
     }
 

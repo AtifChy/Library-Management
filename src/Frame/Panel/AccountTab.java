@@ -288,11 +288,11 @@ public class AccountTab extends JPanel implements ActionListener, KeyListener, M
             );
         } else if (!account.accountExists(userType, name, id)) {
             String[] rawData = new String[6];
-            rawData[0] = idField.getText();
-            rawData[1] = nameField.getText();
-            rawData[2] = mailField.getText();
+            rawData[0] = id;
+            rawData[1] = name;
+            rawData[2] = mail;
             rawData[3] = password;
-            rawData[4] = (String) genderBox.getSelectedItem();
+            rawData[4] = gender;
             rawData[5] = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mma"));
 
             File returnFile = new File("src/data/library/" + name + "_return.txt");
@@ -482,6 +482,7 @@ public class AccountTab extends JPanel implements ActionListener, KeyListener, M
         bookTab.updateBookTable();
     }
 
+    /*
     public void updateTableData() {
         accountTableModel.setRowCount(0);
         String line;
@@ -496,6 +497,7 @@ public class AccountTab extends JPanel implements ActionListener, KeyListener, M
             throw new RuntimeException(e);
         }
     }
+    */
 
     @Override
     public void mousePressed(MouseEvent e) {
