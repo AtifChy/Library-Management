@@ -1,5 +1,6 @@
 package Frame.Panel;
 
+import Extra.Account;
 import Extra.Utils;
 
 import javax.swing.*;
@@ -28,6 +29,8 @@ public class ProfileTab extends JPanel implements MouseListener, KeyListener {
         this();
         this.name = name;
         this.userType = userType;
+
+        setFields();
     }
 
     public ProfileTab() {
@@ -98,6 +101,7 @@ public class ProfileTab extends JPanel implements MouseListener, KeyListener {
         idField = new JTextField();
         idField.setFont(Utils.BIG_FONT);
         idField.setBorder(textFieldBorder);
+        idField.setEditable(false);
         idField.addKeyListener(this);
         gridPanel.add(idField);
 
@@ -198,6 +202,33 @@ public class ProfileTab extends JPanel implements MouseListener, KeyListener {
 
     }
 
+    public void setFields() {
+        File file = null;
+        if (userType.equals("Librarian")) {
+            file = new File("src/data/librarian.txt");
+        } else if (userType.equals("Student")) {
+            file = new File("src/data/student.txt");
+        }
+
+        String line;
+        String[] data;
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(file));
+            while ((line = reader.readLine()) != null) {
+                data = line.split(",");
+                if (data[1].equals(name)) {
+                    idField.setText(data[0]);
+                    nameField.setText(data[1]);
+                    emailField.setText(data[2]);
+                    genderBox.setSelectedItem(data[4]);
+                }
+            }
+            reader.close();
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
     public void saveAction() {
         String newName = nameField.getText();
         String newEmail = emailField.getText();
@@ -230,11 +261,32 @@ public class ProfileTab extends JPanel implements MouseListener, KeyListener {
 
             List<String> lines = new ArrayList<>();
             String line;
+            String[] data;
             try {
                 BufferedReader reader = new BufferedReader(new FileReader(file));
+
+                boolean nameExists = false;
+
                 while ((line = reader.readLine()) != null) {
-                    String[] data = line.split(",");
-                    if (data[0].equals(name)) {
+                    data = line.split(",");
+                    if (data[1].equals(newName) && !newName.equals(name)) {
+                        nameExists = true;
+                    }
+                }
+
+                if (nameExists) {
+                    JOptionPane.showMessageDialog(
+                            this,
+                            "Name already exists",
+                            "Name exists",
+                            JOptionPane.WARNING_MESSAGE
+                    );
+                    return;
+                }
+
+                while ((line = reader.readLine()) != null) {
+                    data = line.split(",");
+                    if (data[1].equals(name)) {
                         String[] updatedData = {newId, newName, newEmail, newPassword, newGender, data[5]};
                         line = String.join(",", updatedData);
                         name = newName;

@@ -208,14 +208,12 @@ public class BookTab extends JPanel implements KeyListener, MouseListener {
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter("src/data/library/books.txt"));
             for (int i = 0; i < bookTableModel.getRowCount(); i++) {
-                StringBuilder rowData = new StringBuilder();
                 for (int j = 0; j < bookTableModel.getColumnCount(); j++) {
-                    rowData.append(bookTableModel.getValueAt(i, j));
+                    writer.write(bookTableModel.getValueAt(i, j).toString());
                     if (j < bookTableModel.getColumnCount() - 1) {
-                        rowData.append(",");
+                        writer.write(",");
                     }
                 }
-                writer.write(rowData.toString());
                 writer.newLine();
             }
             writer.flush();

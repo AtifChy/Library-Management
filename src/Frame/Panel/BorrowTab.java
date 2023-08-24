@@ -3,6 +3,7 @@ package Frame.Panel;
 import Extra.Utils;
 
 import javax.swing.*;
+import javax.swing.border.CompoundBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableRowSorter;
@@ -26,6 +27,11 @@ public class BorrowTab extends JPanel implements KeyListener, MouseListener {
     public BorrowTab(String name) {
         this.setLayout(new FlowLayout());
 
+        CompoundBorder textFieldBorder = BorderFactory.createCompoundBorder(
+                BorderFactory.createMatteBorder(1, 1, 1, 1, Utils.LIGHT_BLUE),
+                BorderFactory.createEmptyBorder(0, 5, 0, 5)
+        );
+
         JPanel topPanel = new JPanel();
         topPanel.setLayout(new FlowLayout());
         topPanel.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
@@ -47,10 +53,7 @@ public class BorrowTab extends JPanel implements KeyListener, MouseListener {
         searchField = new JTextField();
         searchField.setFont(Utils.BIG_FONT);
         searchField.setPreferredSize(new Dimension(300, 50));
-        searchField.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createMatteBorder(0, 0, 1, 0, Utils.BLUE),
-                BorderFactory.createEmptyBorder(0, 5, 0, 0)
-        ));
+        searchField.setBorder(textFieldBorder);
         searchField.addKeyListener(this);
         searchPanel.add(searchField);
         topPanel.add(searchPanel);
@@ -111,6 +114,7 @@ public class BorrowTab extends JPanel implements KeyListener, MouseListener {
         borrowAddButton.setFont(Utils.BIG_BOLD_FONT);
         borrowAddButton.setPreferredSize(new Dimension(200, 60));
         borrowAddButton.setFocusable(false);
+        borrowAddButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         borrowAddButton.addMouseListener(this);
 
         borrowAdd.add(borrowAddButton);

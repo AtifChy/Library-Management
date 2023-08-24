@@ -3,6 +3,7 @@ package Frame.Panel;
 import Extra.Utils;
 
 import javax.swing.*;
+import javax.swing.border.CompoundBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableRowSorter;
@@ -23,6 +24,11 @@ public class ReturnTab extends JPanel implements KeyListener, MouseListener {
 
     public ReturnTab(String name) {
         this.setLayout(new FlowLayout());
+
+        CompoundBorder textFieldBorder = BorderFactory.createCompoundBorder(
+                BorderFactory.createMatteBorder(1, 1, 1, 1, Utils.LIGHT_BLUE),
+                BorderFactory.createEmptyBorder(0, 5, 0, 5)
+        );
 
         JPanel topPanel = new JPanel();
         topPanel.setLayout(new FlowLayout());
@@ -45,10 +51,7 @@ public class ReturnTab extends JPanel implements KeyListener, MouseListener {
         searchField = new JTextField();
         searchField.setFont(Utils.BIG_FONT);
         searchField.setPreferredSize(new Dimension(300, 50));
-        searchField.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createMatteBorder(0, 0, 1, 0, Utils.BLUE),
-                BorderFactory.createEmptyBorder(0, 5, 0, 0)
-        ));
+        searchField.setBorder(textFieldBorder);
         searchField.addKeyListener(this);
         searchPanel.add(searchField);
 
@@ -117,6 +120,7 @@ public class ReturnTab extends JPanel implements KeyListener, MouseListener {
         returnAddButton.setFont(Utils.BIG_BOLD_FONT);
         returnAddButton.setPreferredSize(new Dimension(200, 60));
         returnAddButton.setFocusable(false);
+        returnAddButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         returnAddButton.addMouseListener(this);
 
         returnAdd.add(returnAddButton);

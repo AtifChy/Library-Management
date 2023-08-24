@@ -204,7 +204,7 @@ public class Account {
                     newPassField.setPreferredSize(new Dimension(250, 50));
                     newPassField.setFont(Utils.NORMAL_FONT);
                     newPassField.setBorder(BorderFactory.createCompoundBorder(
-                            BorderFactory.createMatteBorder(0, 0, 1, 0, Utils.BLUE),
+                            BorderFactory.createMatteBorder(1, 1, 1, 1, Utils.LIGHT_BLUE),
                             BorderFactory.createEmptyBorder(0, 5, 0, 5)
                     ));
 
@@ -216,7 +216,7 @@ public class Account {
                     confirmPassField.setPreferredSize(new Dimension(250, 50));
                     confirmPassField.setFont(Utils.NORMAL_FONT);
                     confirmPassField.setBorder(BorderFactory.createCompoundBorder(
-                            BorderFactory.createMatteBorder(0, 0, 1, 0, Utils.BLUE),
+                            BorderFactory.createMatteBorder(1, 1, 1, 1, Utils.LIGHT_BLUE),
                             BorderFactory.createEmptyBorder(0, 5, 0, 5)
                     ));
 
@@ -261,7 +261,15 @@ public class Account {
                     }
                 } else {
                     lines.add(line);
-                    System.out.println(newPassSet);
+
+                    if (newPassSet) {
+                        JOptionPane.showMessageDialog(
+                                parentComponent,
+                                "New password set.",
+                                "Success",
+                                JOptionPane.INFORMATION_MESSAGE
+                        );
+                    }
                 }
             }
             reader.close();

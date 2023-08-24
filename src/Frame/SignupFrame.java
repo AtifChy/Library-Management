@@ -75,8 +75,8 @@ public class SignupFrame extends JFrame implements MouseListener, KeyListener {
         rightPanel.setBackground(Utils.BACKGROUND_COLOR);
 
         JPanel introPanel = new JPanel();
-        introPanel.setPreferredSize(new Dimension(600, 130));
-        introPanel.setBorder(BorderFactory.createEmptyBorder(60, 0, 20, 0));
+        introPanel.setPreferredSize(new Dimension(600, 120));
+        introPanel.setBorder(BorderFactory.createEmptyBorder(50, 0, 20, 0));
         introPanel.setBackground(Utils.BACKGROUND_COLOR);
 
         JLabel introLabel = new JLabel("Create Account");
@@ -159,7 +159,7 @@ public class SignupFrame extends JFrame implements MouseListener, KeyListener {
         optionalPanel.add(genderLabel);
 
         idField = new JTextField();
-        idField.setFont(Utils.NORMAL_FONT);
+        idField.setFont(Utils.BIG_FONT);
         idField.setBorder(textFieldBorder);
         idField.addKeyListener(this);
         optionalPanel.add(idField);
@@ -186,13 +186,13 @@ public class SignupFrame extends JFrame implements MouseListener, KeyListener {
         passwordPanel.add(confirmPassLabel);
 
         passField = new JPasswordField();
-        passField.setFont(Utils.NORMAL_FONT);
+        passField.setFont(Utils.BIG_FONT);
         passField.setBorder(textFieldBorder);
         passField.addKeyListener(this);
         passwordPanel.add(passField);
 
         confirmPassField = new JPasswordField();
-        confirmPassField.setFont(Utils.NORMAL_FONT);
+        confirmPassField.setFont(Utils.BIG_FONT);
         confirmPassField.setBorder(textFieldBorder);
         confirmPassField.addKeyListener(this);
         passwordPanel.add(confirmPassField);
@@ -223,8 +223,8 @@ public class SignupFrame extends JFrame implements MouseListener, KeyListener {
         captchaPanel.add(theCaptchaPanel);
 
         captchaField = new JTextField();
-        captchaField.setPreferredSize(new Dimension(335, 40));
-        captchaField.setFont(Utils.NORMAL_FONT);
+        captchaField.setPreferredSize(new Dimension(335, 41));
+        captchaField.setFont(Utils.BIG_FONT);
         captchaField.setBorder(textFieldBorder);
         captchaField.addKeyListener(this);
         captchaPanel.add(captchaField);
@@ -234,7 +234,7 @@ public class SignupFrame extends JFrame implements MouseListener, KeyListener {
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new GridLayout(1, 1));
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(20, 0, 10, 0));
-        buttonPanel.setPreferredSize(new Dimension(420, 80));
+        buttonPanel.setPreferredSize(new Dimension(420, 90));
         buttonPanel.setBackground(Utils.BACKGROUND_COLOR);
 
         signupButton = new JButton("Sign Up");
