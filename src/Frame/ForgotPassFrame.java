@@ -3,34 +3,21 @@ package Frame;
 import Extra.*;
 
 import javax.swing.*;
+import javax.swing.border.CompoundBorder;
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
 
-public class ForgotPassFrame extends JFrame implements MouseListener {
-    private final JPanel naviPanel;
+public class ForgotPassFrame extends JFrame implements MouseListener, KeyListener {
     private final JButton backButton;
-    private final BufferedImage resizedImage;
-    private final JPanel introPanel;
-    private final JLabel introLabel;
-    private final JPanel radioPanel;
     private final JRadioButton librarianButton;
     private final JRadioButton studentButton;
-    private final ButtonGroup loginGroup;
-    private final JPanel leftPanel;
-    private final JPanel rightPanel;
     private LoginFrame loginFrame;
-    private final Color backgroundColor = Utils.BACKGROUND_COLOR;
-    private final Font introFont = Utils.INTRO_FONT;
-    private final Font normalFont = Utils.NORMAL_FONT;
-    private final Font normalBoldFont = Utils.NORMAL_BOLD_FONT;
-
-    private final Font smallFont = Utils.SMALL_FONT;
-    private final Font smallBoldFont = Utils.SMALL_BOLD_FONT;
-
-    private final Font bigFont = Utils.BIG_FONT;
+    private final JButton resetButton;
+    private final JTextField nameField;
+    private final JTextField emailField;
 
     public ForgotPassFrame() {
         super("Reset Password");
@@ -43,12 +30,12 @@ public class ForgotPassFrame extends JFrame implements MouseListener {
         this.setLayout(new BorderLayout());
 
         // Start of Left Panel
-        leftPanel = new JPanel();
+        JPanel leftPanel = new JPanel();
         leftPanel.setLayout(new BorderLayout());
         leftPanel.setPreferredSize(new Dimension(660, 700));
         leftPanel.setBackground(Color.WHITE);
 
-        naviPanel = new JPanel();
+        JPanel naviPanel = new JPanel();
         naviPanel.setLayout(new BorderLayout());
         naviPanel.setPreferredSize(new Dimension(60, 60));
         naviPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 0, 0));
@@ -65,51 +52,52 @@ public class ForgotPassFrame extends JFrame implements MouseListener {
         naviPanel.add(backButton, BorderLayout.WEST);
         leftPanel.add(naviPanel, BorderLayout.NORTH);
 
-        try {
-            resizedImage = Utils.resizeImage("src/images/forgot-pass.jpg", 500, 500);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        ImageIcon image = new ImageIcon(resizedImage);
+        ImageIcon image = new ImageIcon("src/images/forgotPass.png");
         JLabel imageLabel = new JLabel(image);
         imageLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 70, 0));
         leftPanel.add(imageLabel, BorderLayout.CENTER);
         // End of Left Panel
 
         // Start of Right Panel
-        rightPanel = new JPanel();
+        JPanel rightPanel = new JPanel();
         rightPanel.setLayout(new FlowLayout());
         rightPanel.setPreferredSize(new Dimension(600, 700));
+        rightPanel.setBackground(Utils.BACKGROUND_COLOR);
 
-        introPanel = new JPanel();
+        JPanel introPanel = new JPanel();
         introPanel.setPreferredSize(new Dimension(600, 130));
         introPanel.setBorder(BorderFactory.createEmptyBorder(60, 0, 20, 0));
-        introPanel.setBackground(backgroundColor);
+        introPanel.setBackground(Utils.BACKGROUND_COLOR);
 
-        introLabel = new JLabel("Forgot Password?");
-        introLabel.setFont(introFont);
+        JLabel introLabel = new JLabel("Forgot Password?");
+        introLabel.setFont(Utils.INTRO_FONT);
         introPanel.add(introLabel);
         rightPanel.add(introPanel);
 
-        radioPanel = new JPanel();
+        JPanel radioPanel = new JPanel();
         radioPanel.setLayout(new BorderLayout());
-        radioPanel.setPreferredSize(new Dimension(200, 30));
-        radioPanel.setBackground(backgroundColor);
+        radioPanel.setPreferredSize(new Dimension(200, 50));
+        radioPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));
+        radioPanel.setBackground(Utils.BACKGROUND_COLOR);
 
         ImageIcon checkedIcon = new ImageIcon("src/images/radio_checked.png");
         ImageIcon unCheckedIcon = new ImageIcon("src/images/radio_unchecked.png");
+
         librarianButton = new JRadioButton("Librarian", unCheckedIcon);
         librarianButton.setSelectedIcon(checkedIcon);
-        librarianButton.setFont(smallBoldFont);
-        librarianButton.setBackground(backgroundColor);
+        librarianButton.setFont(Utils.SMALL_BOLD_FONT);
+        librarianButton.setBackground(Utils.BACKGROUND_COLOR);
         librarianButton.setFocusable(false);
+        librarianButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
         studentButton = new JRadioButton("Student", unCheckedIcon);
         studentButton.setSelectedIcon(checkedIcon);
-        studentButton.setFont(smallBoldFont);
-        studentButton.setBackground(backgroundColor);
+        studentButton.setFont(Utils.SMALL_BOLD_FONT);
+        studentButton.setBackground(Utils.BACKGROUND_COLOR);
         studentButton.setFocusable(false);
+        studentButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
-        loginGroup = new ButtonGroup();
+        ButtonGroup loginGroup = new ButtonGroup();
         loginGroup.add(librarianButton);
         loginGroup.add(studentButton);
 
@@ -117,6 +105,51 @@ public class ForgotPassFrame extends JFrame implements MouseListener {
         radioPanel.add(studentButton, BorderLayout.EAST);
         rightPanel.add(radioPanel);
 
+        JLabel nameLabel = new JLabel("Name");
+        nameLabel.setFont(Utils.NORMAL_FONT);
+        nameLabel.setPreferredSize(new Dimension(400, 30));
+        rightPanel.add(nameLabel);
+
+        CompoundBorder textFieldBorder = BorderFactory.createCompoundBorder(
+                BorderFactory.createMatteBorder(1, 1, 1, 1, Utils.LIGHT_BLUE),
+                BorderFactory.createEmptyBorder(0, 5, 0, 5)
+        );
+
+        nameField = new JTextField();
+        nameField.setFont(Utils.BIG_FONT);
+        nameField.setPreferredSize(new Dimension(400, 60));
+        nameField.setBorder(textFieldBorder);
+        nameField.addKeyListener(this);
+        rightPanel.add(nameField);
+
+        JLabel emailLabel = new JLabel("Email");
+        emailLabel.setFont(Utils.NORMAL_FONT);
+        emailLabel.setPreferredSize(new Dimension(400, 40));
+        emailLabel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
+        rightPanel.add(emailLabel);
+
+        emailField = new JTextField();
+        emailField.setFont(Utils.BIG_FONT);
+        emailField.setPreferredSize(new Dimension(400, 60));
+        emailField.setBorder(textFieldBorder);
+        emailField.addKeyListener(this);
+        rightPanel.add(emailField);
+
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setPreferredSize(new Dimension(400, 150));
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(30, 0, 0, 0));
+        buttonPanel.setBackground(Utils.BACKGROUND_COLOR);
+
+        resetButton = new JButton("Reset Password");
+        resetButton.setFont(Utils.BIG_BOLD_FONT);
+        resetButton.setPreferredSize(new Dimension(400, 60));
+        resetButton.setFocusPainted(false);
+        resetButton.addMouseListener(this);
+        resetButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        buttonPanel.add(resetButton);
+
+        rightPanel.add(buttonPanel);
+        // End of Right Panel
 
         this.add(leftPanel, BorderLayout.WEST);
         this.add(rightPanel, BorderLayout.EAST);
@@ -125,11 +158,9 @@ public class ForgotPassFrame extends JFrame implements MouseListener {
     @Override
     public void mouseClicked(MouseEvent e) {
         if (e.getSource() == backButton) {
-            if (loginFrame == null) {
-                loginFrame = new LoginFrame();
-            }
-            this.setVisible(false);
-            loginFrame.setVisible(true);
+            backAction();
+        } else if (e.getSource() == resetButton) {
+            resetAction();
         }
     }
 
@@ -154,6 +185,69 @@ public class ForgotPassFrame extends JFrame implements MouseListener {
     public void mouseExited(MouseEvent e) {
         if (e.getSource() == backButton) {
             backButton.setBackground(Color.WHITE);
+        }
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+        if (e.getKeyChar() == KeyEvent.VK_ENTER) {
+            resetButton.doClick();
+            resetAction();
+        } else if (e.getKeyChar() == KeyEvent.VK_ESCAPE) {
+            backButton.doClick();
+            backAction();
+        }
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+
+    }
+
+    public void backAction() {
+        if (loginFrame == null) {
+            loginFrame = new LoginFrame();
+        }
+        this.setVisible(false);
+        loginFrame.setVisible(true);
+    }
+
+    public void resetAction() {
+        String name = nameField.getText();
+        String email = emailField.getText();
+        if (!librarianButton.isSelected() && !studentButton.isSelected()) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Please select your account type",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        } else if (name.isEmpty()) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Please enter your name",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        } else if (email.isEmpty()) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Please enter your email",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        } else {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Password reset link has been sent to your email",
+                    "Success",
+                    JOptionPane.INFORMATION_MESSAGE
+            );
         }
     }
 }

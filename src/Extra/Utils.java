@@ -1,10 +1,6 @@
 package Extra;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 
 public class Utils {
     public static Font INTRO_FONT = new Font("Century Gothic", Font.BOLD, 25);
@@ -24,15 +20,4 @@ public class Utils {
     public static Color LIGHT_RED = new Color(255, 165, 165);
     public static Color RED = new Color(255, 60, 50);
     public static Color GRAY = new Color(128, 128, 128);
-
-
-    public static BufferedImage resizeImage(String filename, int width, int height) throws IOException {
-        BufferedImage rawImage = ImageIO.read(new File(filename));
-        BufferedImage resizedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D graphics2D = resizedImage.createGraphics();
-        graphics2D.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-        graphics2D.drawImage(rawImage, 0, 0, width, height, null);
-        graphics2D.dispose();
-        return resizedImage;
-    }
 }

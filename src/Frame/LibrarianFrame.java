@@ -110,7 +110,6 @@ public class LibrarianFrame extends JFrame implements MouseListener {
         ProfileTab profileTab = new ProfileTab(name, userType);
 
         accountTab.setBookTab(bookTab);
-        profileTab.setAccountTab(accountTab);
 
         tabbedPane.add("Home", homeAdminTab);
         tabbedPane.add("Books", bookTab);

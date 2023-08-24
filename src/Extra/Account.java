@@ -154,9 +154,8 @@ public class Account {
             reader = new BufferedReader(new FileReader(file));
             String line;
             while ((line = reader.readLine()) != null) {
-                if (line.contains(id) && line.contains(name)) {
-                    return true;
-                } else if (line.contains(id) || line.contains(name)) {
+                String[] data = line.split(",");
+                if (data[0].equals(id) || data[1].equals(name)) {
                     return true;
                 }
             }

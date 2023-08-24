@@ -3,14 +3,17 @@ package Frame;
 import Extra.*;
 
 import javax.swing.*;
+import javax.swing.border.CompoundBorder;
 import javax.swing.plaf.basic.BasicButtonUI;
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.*;
 
 
-public class LoginFrame extends JFrame implements MouseListener {
+public class LoginFrame extends JFrame implements MouseListener, KeyListener {
     private ButtonGroup loginGroup;
     private JRadioButton librarianButton;
     private JRadioButton studentButton;
@@ -31,15 +34,15 @@ public class LoginFrame extends JFrame implements MouseListener {
         Image iconImage = Toolkit.getDefaultToolkit().getImage("src/images/library.png");
         this.setIconImage(iconImage);
         this.setSize(1260, 700);
+        this.setLayout(new BorderLayout());
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null);
         this.setResizable(false);
-        this.setLayout(new BorderLayout());
 
-        UIManager.put("OptionPane.messageFont", Utils.NORMAL_FONT);
-        UIManager.put("OptionPane.buttonFont", Utils.NORMAL_FONT);
+        lookAndFeel();
 
         JPanel loginPanel = new JPanel();
+        loginPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 5));
         loginPanel.setPreferredSize(new Dimension(560, 700));
         loginPanel.setBackground(Utils.BACKGROUND_COLOR);
 
@@ -55,7 +58,8 @@ public class LoginFrame extends JFrame implements MouseListener {
 
         JPanel radioPanel = new JPanel();
         radioPanel.setLayout(new BorderLayout());
-        radioPanel.setPreferredSize(new Dimension(200, 30));
+        radioPanel.setPreferredSize(new Dimension(200, 50));
+        radioPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));
         radioPanel.setBackground(Utils.BACKGROUND_COLOR);
 
         ImageIcon checkedIcon = new ImageIcon("src/images/radio_checked.png");
@@ -67,7 +71,7 @@ public class LoginFrame extends JFrame implements MouseListener {
         librarianButton.setFont(Utils.SMALL_BOLD_FONT);
         librarianButton.setBackground(Utils.BACKGROUND_COLOR);
         librarianButton.setFocusable(false);
-        librarianButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        librarianButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
         studentButton = new JRadioButton("Student", unCheckedIcon);
         studentButton.setActionCommand("Student");
@@ -75,12 +79,12 @@ public class LoginFrame extends JFrame implements MouseListener {
         studentButton.setFont(Utils.SMALL_BOLD_FONT);
         studentButton.setBackground(Utils.BACKGROUND_COLOR);
         studentButton.setFocusable(false);
-        studentButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        studentButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
         loginGroup = new ButtonGroup();
         loginGroup.add(librarianButton);
         loginGroup.add(studentButton);
-        loginGroup.setSelected(studentButton.getModel(), true);
+        // loginGroup.setSelected(studentButton.getModel(), true);
 
         radioPanel.add(librarianButton, BorderLayout.WEST);
         radioPanel.add(studentButton, BorderLayout.EAST);
@@ -89,43 +93,54 @@ public class LoginFrame extends JFrame implements MouseListener {
         JLabel nameLabel = new JLabel("User Name");
         nameLabel.setFont(Utils.NORMAL_FONT);
         nameLabel.setPreferredSize(new Dimension(420, 28));
+        nameLabel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
         loginPanel.add(nameLabel);
+
+        CompoundBorder textFieldBorder = BorderFactory.createCompoundBorder(
+                BorderFactory.createMatteBorder(1, 1, 1, 0, Utils.LIGHT_BLUE),
+                BorderFactory.createEmptyBorder(0, 5, 0, 5)
+        );
 
         nameField = new JTextField();
         nameField.setPreferredSize(new Dimension(420, 56));
         nameField.setFont(Utils.BIG_FONT);
         nameField.setToolTipText("Enter your user name");
         nameField.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createMatteBorder(0, 0, 1, 0, Color.BLACK),
+                BorderFactory.createMatteBorder(1, 1, 1, 1, Utils.LIGHT_BLUE),
                 BorderFactory.createEmptyBorder(0, 5, 0, 0)
         ));
-        nameField.setBackground(Utils.BACKGROUND_COLOR);
+        nameField.addKeyListener(this);
         loginPanel.add(nameField);
 
         JLabel passLabel = new JLabel("Password");
         passLabel.setFont(Utils.NORMAL_FONT);
         passLabel.setPreferredSize(new Dimension(420, 28));
+        passLabel.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
         loginPanel.add(passLabel);
 
         passField = new JPasswordField();
-        passField.setPreferredSize(new Dimension(390, 56));
+        passField.setPreferredSize(new Dimension(385, 56));
         passField.setFont(Utils.BIG_FONT);
         passField.setToolTipText("Enter your password");
         passField.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createMatteBorder(0, 0, 1, 0, Color.BLACK),
-                BorderFactory.createEmptyBorder(0, 5, 0, 0)
+                BorderFactory.createMatteBorder(1, 1, 1, 0, Utils.LIGHT_BLUE),
+                BorderFactory.createEmptyBorder(0, 5, 0, 5)
         ));
-        passField.setBackground(Utils.BACKGROUND_COLOR);
+        passField.addKeyListener(this);
         loginPanel.add(passField);
+
 
         showIcon = new ImageIcon("src/images/show.png");
         hideIcon = new ImageIcon("src/images/hide.png");
         showHideButton = new JToggleButton(showIcon);
-        showHideButton.setPreferredSize(new Dimension(25, 56));
+        showHideButton.setPreferredSize(new Dimension(35, 56));
         showHideButton.setFocusable(false);
-        showHideButton.setBackground(Utils.BACKGROUND_COLOR);
-        showHideButton.setBorderPainted(false);
-        showHideButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        showHideButton.setBackground(Color.WHITE);
+        showHideButton.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createMatteBorder(1, 0, 1, 1, Utils.LIGHT_BLUE),
+                BorderFactory.createEmptyBorder(0, 0, 0, 10)
+        ));
+        showHideButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         showHideButton.setUI(new BasicButtonUI() {
             private Color getSelectColor() {
                 return Utils.BACKGROUND_COLOR;
@@ -146,7 +161,7 @@ public class LoginFrame extends JFrame implements MouseListener {
         rememberBox.setFont(Utils.SMALL_FONT);
         rememberBox.setBackground(Utils.BACKGROUND_COLOR);
         rememberBox.setSelected(false);
-        rememberBox.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        rememberBox.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         rememberPanel.add(rememberBox, BorderLayout.WEST);
 
         forgotButton = new JButton("Forgot password?");
@@ -156,7 +171,7 @@ public class LoginFrame extends JFrame implements MouseListener {
         forgotButton.setBackground(Utils.BACKGROUND_COLOR);
         forgotButton.setForeground(Utils.BLUE);
         forgotButton.setMargin(new Insets(0, 0, 0, 0));
-        forgotButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        forgotButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         forgotButton.setUI(new BasicButtonUI() {
             private Color getSelectColor() {
                 return Utils.BACKGROUND_COLOR;
@@ -175,8 +190,8 @@ public class LoginFrame extends JFrame implements MouseListener {
 
         loginButton = new JButton("Log in");
         loginButton.setFont(Utils.BIG_BOLD_FONT);
-        loginButton.setFocusable(false);
-        loginButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        loginButton.setFocusPainted(false);
+        loginButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         loginButton.addMouseListener(this);
         buttonPanel.add(loginButton);
         loginPanel.add(buttonPanel);
@@ -193,7 +208,7 @@ public class LoginFrame extends JFrame implements MouseListener {
         signupButton.setFocusable(false);
         signupButton.setBackground(Utils.BACKGROUND_COLOR);
         signupButton.setMargin(new Insets(0, 0, 0, 0));
-        signupButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        signupButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         signupButton.addMouseListener(this);
         signupButton.setUI(new BasicButtonUI() {
             private Color getSelectColor() {
@@ -235,9 +250,7 @@ public class LoginFrame extends JFrame implements MouseListener {
     }
 
     public LoginFrame(String userType, String name, String password) {
-        UIManager.put("OptionPane.messageFont", Utils.NORMAL_FONT);
-        UIManager.put("OptionPane.buttonFont", Utils.NORMAL_FONT);
-
+        lookAndFeel();
         login(userType, name, password);
     }
 
@@ -256,96 +269,11 @@ public class LoginFrame extends JFrame implements MouseListener {
             this.setVisible(false);
             forgotPassFrame.setVisible(true);
         } else if (e.getSource() == loginButton) {
-            if (!librarianButton.isSelected() && !studentButton.isSelected()) {
-                JOptionPane.showMessageDialog(
-                        this,
-                        "Please select either 'Librarian' or 'Student'.",
-                        "Login Error",
-                        JOptionPane.ERROR_MESSAGE
-                );
-            } else {
-                String userType = loginGroup.getSelection().getActionCommand();
-                String name = nameField.getText();
-                String password = String.valueOf(passField.getPassword());
-
-                if (userType.equals("Librarian")) {
-                    file = new File("src/data/librarian.txt");
-                } else if (userType.equals("Student")) {
-                    file = new File("src/data/student.txt");
-                }
-
-                boolean newPassSet = false;
-                try {
-                    BufferedReader reader = new BufferedReader(new FileReader(file));
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        String[] data = line.split(",");
-                        if (data[0].equals(name) && data[3].equals("NO_PASSWORD_SET")) {
-                            newPassSet = true;
-                        }
-                    }
-                    reader.close();
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
-                }
-
-                if (nameField.getText().isEmpty() && passField.getPassword().length == 0 && !newPassSet) {
-                    JOptionPane.showMessageDialog(
-                            this,
-                            "Please, Fill the black areas.",
-                            "Warning",
-                            JOptionPane.WARNING_MESSAGE
-                    );
-                } else {
-                    login(userType, name, password);
-                }
-            }
+            loginAction();
         } else if (e.getSource() == signupButton) {
             SignupFrame signupFrame = new SignupFrame();
             this.setVisible(false);
             signupFrame.setVisible(true);
-        }
-    }
-
-    public void login(String userType, String name, String password) {
-        Account account = new Account(this);
-        boolean isLoggedIn = account.loginAccount(userType, name, password);
-        if (isLoggedIn) {
-            try {
-                rememberMe();
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
-
-            if (userType.equals("Librarian")) {
-                LibrarianFrame librarianFrame = new LibrarianFrame(name, userType);
-                librarianFrame.setVisible(true);
-            } else if (userType.equals("Student")) {
-                StudentFrame studentFrame = new StudentFrame(name, userType);
-                studentFrame.setVisible(true);
-            }
-
-            this.setVisible(false);
-            System.out.println("Logged in as \"" + name + " - " + userType + "\"");
-        }
-    }
-
-    public void rememberMe() throws IOException {
-        if (this.rememberBox != null && this.rememberBox.isSelected()) {
-            String userType = loginGroup.getSelection().getActionCommand();
-            String name = nameField.getText();
-            String password = String.valueOf(passField.getPassword());
-
-            File rememberFile = new File("src/data/remember.txt");
-            if (!rememberFile.exists()) {
-                rememberFile.createNewFile();
-            }
-
-            String rememberData = userType + "," + name + "," + password;
-            BufferedWriter writer = new BufferedWriter(new FileWriter(rememberFile));
-            writer.write(rememberData);
-            writer.flush();
-            writer.close();
         }
     }
 
@@ -379,5 +307,118 @@ public class LoginFrame extends JFrame implements MouseListener {
         } else if (e.getSource() == backButton) {
             backButton.setBackground(Color.WHITE);
         }
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+        if (e.getKeyChar() == KeyEvent.VK_ENTER) {
+            loginButton.doClick();
+            loginAction();
+        }
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+
+    }
+
+    public void login(String userType, String name, String password) {
+        Account account = new Account(this);
+        boolean isLoggedIn = account.loginAccount(userType, name, password);
+        if (isLoggedIn) {
+            try {
+                rememberMe();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+
+            if (userType.equals("Librarian")) {
+                LibrarianFrame librarianFrame = new LibrarianFrame(name, userType);
+                librarianFrame.setVisible(true);
+            } else if (userType.equals("Student")) {
+                StudentFrame studentFrame = new StudentFrame(name, userType);
+                studentFrame.setVisible(true);
+            }
+
+            this.setVisible(false);
+            System.out.println("Logged in as \"" + name + " - " + userType + "\"");
+        }
+    }
+
+    public void loginAction() {
+        if (!librarianButton.isSelected() && !studentButton.isSelected()) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Please select either 'Librarian' or 'Student'.",
+                    "Login Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        } else {
+            String userType = loginGroup.getSelection().getActionCommand();
+            String name = nameField.getText();
+            String password = String.valueOf(passField.getPassword());
+
+            if (userType.equals("Librarian")) {
+                file = new File("src/data/librarian.txt");
+            } else if (userType.equals("Student")) {
+                file = new File("src/data/student.txt");
+            }
+
+            boolean newPassSet = false;
+            try {
+                BufferedReader reader = new BufferedReader(new FileReader(file));
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    String[] data = line.split(",");
+                    if (data[0].equals(name) && data[3].equals("NO_PASSWORD_SET")) {
+                        newPassSet = true;
+                    }
+                }
+                reader.close();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+
+            if (nameField.getText().isEmpty() && passField.getPassword().length == 0 && !newPassSet) {
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Please, Fill the black areas.",
+                        "Warning",
+                        JOptionPane.WARNING_MESSAGE
+                );
+            } else {
+                login(userType, name, password);
+            }
+        }
+    }
+
+    public void rememberMe() throws IOException {
+        if (this.rememberBox != null && this.rememberBox.isSelected()) {
+            String userType = loginGroup.getSelection().getActionCommand();
+            String name = nameField.getText();
+            String password = String.valueOf(passField.getPassword());
+
+            File rememberFile = new File("src/data/remember.txt");
+            if (!rememberFile.exists()) {
+                rememberFile.createNewFile();
+            }
+
+            String rememberData = userType + "," + name + "," + password;
+            BufferedWriter writer = new BufferedWriter(new FileWriter(rememberFile));
+            writer.write(rememberData);
+            writer.flush();
+            writer.close();
+        }
+    }
+
+    public void lookAndFeel() {
+        UIManager.put("OptionPane.messageFont", Utils.NORMAL_FONT);
+        UIManager.put("OptionPane.buttonFont", Utils.NORMAL_FONT);
+        UIManager.put("Button.focus", new Color(0, 0, 0, 0));
     }
 }

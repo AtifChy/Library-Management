@@ -3,6 +3,7 @@ package Frame.Panel;
 import Extra.Utils;
 
 import javax.swing.*;
+import javax.swing.border.CompoundBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableRowSorter;
@@ -12,7 +13,7 @@ import java.io.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-public class BookTab extends JPanel implements KeyListener, ActionListener, MouseListener {
+public class BookTab extends JPanel implements KeyListener, MouseListener {
     private final JTextField searchField;
     private final DefaultTableModel bookTableModel;
     private final JTable bookTable;
@@ -27,6 +28,11 @@ public class BookTab extends JPanel implements KeyListener, ActionListener, Mous
 
     public BookTab() {
         this.setLayout(new FlowLayout());
+
+        CompoundBorder textFieldBorder = BorderFactory.createCompoundBorder(
+                BorderFactory.createMatteBorder(1, 1, 1, 1, Utils.LIGHT_BLUE),
+                BorderFactory.createEmptyBorder(0, 5, 0, 5)
+        );
 
         JPanel topPanel = new JPanel();
         topPanel.setLayout(new FlowLayout());
@@ -49,10 +55,7 @@ public class BookTab extends JPanel implements KeyListener, ActionListener, Mous
         searchField = new JTextField(20);
         searchField.setPreferredSize(new Dimension(300, 50));
         searchField.setFont(Utils.BIG_FONT);
-        searchField.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createMatteBorder(0, 0, 1, 0, Utils.BLUE),
-                BorderFactory.createEmptyBorder(0, 5, 0, 5)
-        ));
+        searchField.setBorder(textFieldBorder);
         searchField.addKeyListener(this);
         searchPanel.add(searchField);
         topPanel.add(searchPanel);
@@ -115,37 +118,25 @@ public class BookTab extends JPanel implements KeyListener, ActionListener, Mous
         titleLabel.setFont(Utils.NORMAL_FONT);
         titleField = new JTextField();
         titleField.setFont(Utils.BIG_FONT);
-        titleField.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createMatteBorder(0, 0, 1, 0, Utils.BLUE),
-                BorderFactory.createEmptyBorder(0, 5, 0, 5)
-        ));
+        titleField.setBorder(textFieldBorder);
 
         JLabel authorLabel = new JLabel("Author");
         authorLabel.setFont(Utils.NORMAL_FONT);
         authorField = new JTextField();
         authorField.setFont(Utils.BIG_FONT);
-        authorField.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createMatteBorder(0, 0, 1, 0, Utils.BLUE),
-                BorderFactory.createEmptyBorder(0, 5, 0, 5)
-        ));
+        authorField.setBorder(textFieldBorder);
 
         JLabel pubLabel = new JLabel("Publisher");
         pubLabel.setFont(Utils.NORMAL_FONT);
         pubField = new JTextField();
         pubField.setFont(Utils.BIG_FONT);
-        pubField.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createMatteBorder(0, 0, 1, 0, Utils.BLUE),
-                BorderFactory.createEmptyBorder(0, 5, 0, 5)
-        ));
+        pubField.setBorder(textFieldBorder);
 
         JLabel quantityLabel = new JLabel("Quantity");
         quantityLabel.setFont(Utils.NORMAL_FONT);
         quantityField = new JTextField();
         quantityField.setFont(Utils.BIG_FONT);
-        quantityField.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createMatteBorder(0, 0, 1, 0, Utils.BLUE),
-                BorderFactory.createEmptyBorder(0, 5, 0, 5)
-        ));
+        quantityField.setBorder(textFieldBorder);
 
         addPanel.add(titleLabel);
         addPanel.add(authorLabel);
@@ -165,6 +156,7 @@ public class BookTab extends JPanel implements KeyListener, ActionListener, Mous
         addButton = new JButton("Add Book");
         addButton.setPreferredSize(new Dimension(150, 60));
         addButton.setFont(Utils.BIG_BOLD_FONT);
+        addButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         addButton.setFocusable(false);
         addButton.addMouseListener(this);
         managePanel.add(addButton);
@@ -172,6 +164,7 @@ public class BookTab extends JPanel implements KeyListener, ActionListener, Mous
         updateButton = new JButton("Update Book");
         updateButton.setPreferredSize(new Dimension(170, 60));
         updateButton.setFont(Utils.BIG_BOLD_FONT);
+        updateButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         updateButton.setFocusable(false);
         updateButton.addMouseListener(this);
         managePanel.add(updateButton);
@@ -179,6 +172,7 @@ public class BookTab extends JPanel implements KeyListener, ActionListener, Mous
         removeButton = new JButton("Remove Book");
         removeButton.setPreferredSize(new Dimension(170, 60));
         removeButton.setFont(Utils.BIG_BOLD_FONT);
+        removeButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         removeButton.setFocusable(false);
         removeButton.addMouseListener(this);
         managePanel.add(removeButton);
@@ -186,6 +180,7 @@ public class BookTab extends JPanel implements KeyListener, ActionListener, Mous
         clearButton = new JButton("Clear");
         clearButton.setPreferredSize(new Dimension(100, 60));
         clearButton.setFont(Utils.BIG_BOLD_FONT);
+        clearButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         clearButton.setFocusable(false);
         clearButton.addMouseListener(this);
         managePanel.add(clearButton);
@@ -207,11 +202,6 @@ public class BookTab extends JPanel implements KeyListener, ActionListener, Mous
         TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(bookTableModel);
         bookTable.setRowSorter(sorter);
         sorter.setRowFilter(RowFilter.regexFilter(searchField.getText()));
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-
     }
 
     public void updateData() {
@@ -344,11 +334,6 @@ public class BookTab extends JPanel implements KeyListener, ActionListener, Mous
         } else if (e.getSource() == removeButton) {
             if (selectedRow >= 0) {
                 bookTableModel.removeRow(selectedRow);
-                /*
-                for (int i = 0; i < bookTableModel.getRowCount(); i++) {
-                    bookTableModel.setValueAt(String.valueOf(i + 1), i, 0);
-                }
-                */
             }
             updateData();
         } else if (e.getSource() == clearButton) {

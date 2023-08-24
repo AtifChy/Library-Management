@@ -3,14 +3,17 @@ package Frame.Panel;
 import Extra.Utils;
 
 import javax.swing.*;
+import javax.swing.border.CompoundBorder;
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProfileTab extends JPanel implements MouseListener {
+public class ProfileTab extends JPanel implements MouseListener, KeyListener {
     private final JButton saveButton;
     private final JTextField nameField;
     private final JTextField emailField;
@@ -20,7 +23,6 @@ public class ProfileTab extends JPanel implements MouseListener {
     private final JPasswordField confirmPasswordField;
     private String name;
     private String userType;
-    private AccountTab accountTab;
 
     public ProfileTab(String name, String userType) {
         this();
@@ -31,6 +33,11 @@ public class ProfileTab extends JPanel implements MouseListener {
     public ProfileTab() {
         this.setLayout(new BorderLayout());
         this.setPreferredSize(new Dimension(940, 700));
+
+        CompoundBorder textFieldBorder = BorderFactory.createCompoundBorder(
+                BorderFactory.createMatteBorder(1, 1, 1, 1, Utils.LIGHT_BLUE),
+                BorderFactory.createEmptyBorder(0, 5, 0, 5)
+        );
 
         JPanel topPanel = new JPanel();
         topPanel.setPreferredSize(new Dimension(940, 100));
@@ -58,12 +65,10 @@ public class ProfileTab extends JPanel implements MouseListener {
         centerPanel.add(nameLabel);
 
         nameField = new JTextField();
-        nameField.setFont(Utils.NORMAL_FONT);
+        nameField.setFont(Utils.BIG_FONT);
         nameField.setPreferredSize(new Dimension(360, 50));
-        nameField.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createMatteBorder(0, 0, 1, 0, Utils.BLUE),
-                BorderFactory.createEmptyBorder(0, 5, 0, 5)
-        ));
+        nameField.setBorder(textFieldBorder);
+        nameField.addKeyListener(this);
         centerPanel.add(nameField);
 
         JLabel emailLabel = new JLabel("Email");
@@ -72,12 +77,10 @@ public class ProfileTab extends JPanel implements MouseListener {
         centerPanel.add(emailLabel);
 
         emailField = new JTextField();
-        emailField.setFont(Utils.NORMAL_FONT);
+        emailField.setFont(Utils.BIG_FONT);
         emailField.setPreferredSize(new Dimension(360, 50));
-        emailField.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createMatteBorder(0, 0, 1, 0, Utils.BLUE),
-                BorderFactory.createEmptyBorder(0, 5, 0, 5)
-        ));
+        emailField.setBorder(textFieldBorder);
+        emailField.addKeyListener(this);
         centerPanel.add(emailField);
 
         JPanel gridPanel = new JPanel();
@@ -93,16 +96,15 @@ public class ProfileTab extends JPanel implements MouseListener {
         gridPanel.add(genderLabel);
 
         idField = new JTextField();
-        idField.setFont(Utils.NORMAL_FONT);
-        idField.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createMatteBorder(0, 0, 1, 0, Utils.BLUE),
-                BorderFactory.createEmptyBorder(0, 5, 0, 5)
-        ));
+        idField.setFont(Utils.BIG_FONT);
+        idField.setBorder(textFieldBorder);
+        idField.addKeyListener(this);
         gridPanel.add(idField);
 
         String[] gender = {"Male", "Female", "Other"};
         genderBox = new JComboBox<>(gender);
         genderBox.setFont(Utils.NORMAL_FONT);
+        genderBox.setFocusable(false);
         gridPanel.add(genderBox);
 
         centerPanel.add(gridPanel);
@@ -113,12 +115,10 @@ public class ProfileTab extends JPanel implements MouseListener {
         centerPanel.add(passwordLabel);
 
         passwordField = new JPasswordField();
-        passwordField.setFont(Utils.NORMAL_FONT);
+        passwordField.setFont(Utils.BIG_FONT);
         passwordField.setPreferredSize(new Dimension(360, 50));
-        passwordField.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createMatteBorder(0, 0, 1, 0, Utils.BLUE),
-                BorderFactory.createEmptyBorder(0, 5, 0, 5)
-        ));
+        passwordField.setBorder(textFieldBorder);
+        passwordField.addKeyListener(this);
         centerPanel.add(passwordField);
 
         JLabel confirmPasswordLabel = new JLabel("Confirm Password");
@@ -127,12 +127,10 @@ public class ProfileTab extends JPanel implements MouseListener {
         centerPanel.add(confirmPasswordLabel);
 
         confirmPasswordField = new JPasswordField();
-        confirmPasswordField.setFont(Utils.NORMAL_FONT);
+        confirmPasswordField.setFont(Utils.BIG_FONT);
         confirmPasswordField.setPreferredSize(new Dimension(360, 50));
-        confirmPasswordField.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createMatteBorder(0, 0, 1, 0, Utils.BLUE),
-                BorderFactory.createEmptyBorder(0, 5, 0, 5)
-        ));
+        confirmPasswordField.setBorder(textFieldBorder);
+        confirmPasswordField.addKeyListener(this);
         centerPanel.add(confirmPasswordField);
 
         this.add(centerPanel, BorderLayout.CENTER);
@@ -155,79 +153,10 @@ public class ProfileTab extends JPanel implements MouseListener {
         this.add(bottomPanel, BorderLayout.SOUTH);
     }
 
-    public void setAccountTab(AccountTab accountTab) {
-        this.accountTab = accountTab;
-    }
-
     @Override
     public void mouseClicked(MouseEvent e) {
         if (e.getSource() == saveButton) {
-            System.out.println(name);
-
-            String newName = nameField.getText();
-            String newEmail = emailField.getText();
-            String newId = idField.getText();
-            String newGender = (String) genderBox.getSelectedItem();
-            String newPassword = String.valueOf(passwordField.getPassword());
-            String newConfirmPassword = String.valueOf(confirmPasswordField.getPassword());
-
-            if (newName.isEmpty() || newEmail.isEmpty() || newId.isEmpty() || newPassword.isEmpty() || newConfirmPassword.isEmpty()) {
-                JOptionPane.showMessageDialog(
-                        this,
-                        "Please fill all the fields",
-                        "Empty fields",
-                        JOptionPane.WARNING_MESSAGE
-                );
-            } else if (!newPassword.equals(newConfirmPassword)) {
-                JOptionPane.showMessageDialog(
-                        this,
-                        "Password and Confirm Password does not match",
-                        "Password mismatch",
-                        JOptionPane.WARNING_MESSAGE
-                );
-            } else {
-                File file = null;
-                if (userType.equals("Librarian")) {
-                    file = new File("src/data/librarian.txt");
-                } else if (userType.equals("Student")) {
-                    file = new File("src/data/student.txt");
-                }
-
-                List<String> lines = new ArrayList<>();
-                String line;
-                try {
-                    BufferedReader reader = new BufferedReader(new FileReader(file));
-                    while ((line = reader.readLine()) != null) {
-                        String[] data = line.split(",");
-                        if (data[0].equals(name)) {
-                            String[] updatedData = {newId, newName, newEmail, newPassword, newGender, data[5]};
-                            line = String.join(",", updatedData);
-                            name = newName;
-                        }
-                        lines.add(line);
-                    }
-                    reader.close();
-
-                    BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-                    for (int i = 0; i < lines.size(); i++) {
-                        writer.write(lines.get(i));
-                        writer.newLine();
-                    }
-                    writer.flush();
-                    writer.close();
-
-                    JOptionPane.showMessageDialog(
-                            this,
-                            "Profile updated successfully",
-                            "Profile updated",
-                            JOptionPane.INFORMATION_MESSAGE
-                    );
-                    System.out.println("Profile updated successfully");
-                } catch (IOException ex) {
-                    throw new RuntimeException(ex);
-                }
-            }
-
+            saveAction();
         }
     }
 
@@ -249,5 +178,89 @@ public class ProfileTab extends JPanel implements MouseListener {
     @Override
     public void mouseExited(MouseEvent e) {
 
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+        if (e.getKeyChar() == KeyEvent.VK_ENTER) {
+            saveButton.doClick();
+            saveAction();
+        }
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+
+    }
+
+    public void saveAction() {
+        String newName = nameField.getText();
+        String newEmail = emailField.getText();
+        String newId = idField.getText();
+        String newGender = (String) genderBox.getSelectedItem();
+        String newPassword = String.valueOf(passwordField.getPassword());
+        String newConfirmPassword = String.valueOf(confirmPasswordField.getPassword());
+
+        if (newName.isEmpty() || newEmail.isEmpty() || newId.isEmpty() || newPassword.isEmpty() || newConfirmPassword.isEmpty()) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Please fill all the fields",
+                    "Empty fields",
+                    JOptionPane.WARNING_MESSAGE
+            );
+        } else if (!newPassword.equals(newConfirmPassword)) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Password and Confirm Password does not match",
+                    "Password mismatch",
+                    JOptionPane.WARNING_MESSAGE
+            );
+        } else {
+            File file = null;
+            if (userType.equals("Librarian")) {
+                file = new File("src/data/librarian.txt");
+            } else if (userType.equals("Student")) {
+                file = new File("src/data/student.txt");
+            }
+
+            List<String> lines = new ArrayList<>();
+            String line;
+            try {
+                BufferedReader reader = new BufferedReader(new FileReader(file));
+                while ((line = reader.readLine()) != null) {
+                    String[] data = line.split(",");
+                    if (data[0].equals(name)) {
+                        String[] updatedData = {newId, newName, newEmail, newPassword, newGender, data[5]};
+                        line = String.join(",", updatedData);
+                        name = newName;
+                    }
+                    lines.add(line);
+                }
+                reader.close();
+
+                BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+                for (int i = 0; i < lines.size(); i++) {
+                    writer.write(lines.get(i));
+                    writer.newLine();
+                }
+                writer.flush();
+                writer.close();
+
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Profile updated successfully",
+                        "Profile updated",
+                        JOptionPane.INFORMATION_MESSAGE
+                );
+                System.out.println("Profile updated successfully");
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
     }
 }

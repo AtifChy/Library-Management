@@ -4,6 +4,7 @@ import Extra.Account;
 import Extra.Utils;
 
 import javax.swing.*;
+import javax.swing.border.CompoundBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableRowSorter;
@@ -32,6 +33,11 @@ public class AccountTab extends JPanel implements ActionListener, KeyListener, M
     public AccountTab() {
         this.setLayout(new FlowLayout());
 
+        CompoundBorder textFieldBorder = BorderFactory.createCompoundBorder(
+                BorderFactory.createMatteBorder(1, 1, 1, 1, Utils.LIGHT_BLUE),
+                BorderFactory.createEmptyBorder(0, 5, 0, 5)
+        );
+
         JPanel topPanel = new JPanel();
         topPanel.setLayout(new FlowLayout());
         topPanel.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
@@ -53,10 +59,7 @@ public class AccountTab extends JPanel implements ActionListener, KeyListener, M
         searchField = new JTextField(20);
         searchField.setPreferredSize(new Dimension(300, 50));
         searchField.setFont(Utils.BIG_FONT);
-        searchField.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createMatteBorder(0, 0, 1, 0, Utils.BLUE),
-                BorderFactory.createEmptyBorder(0, 5, 0, 5)
-        ));
+        searchField.setBorder(textFieldBorder);
         searchField.addKeyListener(this);
         searchPanel.add(searchField);
         topPanel.add(searchPanel);
@@ -116,7 +119,7 @@ public class AccountTab extends JPanel implements ActionListener, KeyListener, M
         int rowHeight = 30;
         accountTable.setRowHeight(rowHeight);
 
-        int[] columnWidths = {85, 85, 150, 45, 80, 155};
+        int[] columnWidths = {85, 85, 150, 45, 70, 165};
         for (int i = 0; i < columnWidths.length; i++) {
             accountTable.getColumnModel().getColumn(i).setPreferredWidth(columnWidths[i]);
         }
@@ -138,34 +141,26 @@ public class AccountTab extends JPanel implements ActionListener, KeyListener, M
         nameLabel.setFont(Utils.NORMAL_FONT);
         nameField = new JTextField();
         nameField.setFont(Utils.BIG_FONT);
-        nameField.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createMatteBorder(0, 0, 1, 0, Utils.BLUE),
-                BorderFactory.createEmptyBorder(0, 5, 0, 5)
-        ));
+        nameField.setBorder(textFieldBorder);
 
         JLabel idLabel = new JLabel("ID");
         idLabel.setFont(Utils.NORMAL_FONT);
         idField = new JTextField();
         idField.setFont(Utils.BIG_FONT);
-        idField.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createMatteBorder(0, 0, 1, 0, Utils.BLUE),
-                BorderFactory.createEmptyBorder(0, 5, 0, 5)
-        ));
+        idField.setBorder(textFieldBorder);
 
         JLabel mailLabel = new JLabel("Email");
         mailLabel.setFont(Utils.NORMAL_FONT);
         mailField = new JTextField();
         mailField.setFont(Utils.BIG_FONT);
-        mailField.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createMatteBorder(0, 0, 1, 0, Utils.BLUE),
-                BorderFactory.createEmptyBorder(0, 5, 0, 5)
-        ));
+        mailField.setBorder(textFieldBorder);
 
         JLabel genderLabel = new JLabel("Gender");
         genderLabel.setFont(Utils.NORMAL_FONT);
         String[] gender = {"Male", "Female", "Other"};
         genderBox = new JComboBox<>(gender);
         genderBox.setFont(Utils.NORMAL_FONT);
+        genderBox.setFocusable(false);
 
         addPanel.add(nameLabel);
         addPanel.add(idLabel);
@@ -186,6 +181,7 @@ public class AccountTab extends JPanel implements ActionListener, KeyListener, M
         addButton.setPreferredSize(new Dimension(150, 60));
         addButton.setFont(Utils.BIG_BOLD_FONT);
         addButton.setFocusable(false);
+        addButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         addButton.addMouseListener(this);
         managePanel.add(addButton);
 
@@ -193,6 +189,7 @@ public class AccountTab extends JPanel implements ActionListener, KeyListener, M
         updateButton.setPreferredSize(new Dimension(200, 60));
         updateButton.setFont(Utils.BIG_BOLD_FONT);
         updateButton.setFocusable(false);
+        updateButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         updateButton.addMouseListener(this);
         managePanel.add(updateButton);
 
@@ -200,6 +197,7 @@ public class AccountTab extends JPanel implements ActionListener, KeyListener, M
         removeButton.setPreferredSize(new Dimension(200, 60));
         removeButton.setFont(Utils.BIG_BOLD_FONT);
         removeButton.setFocusable(false);
+        removeButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         removeButton.addMouseListener(this);
         managePanel.add(removeButton);
 
@@ -207,6 +205,7 @@ public class AccountTab extends JPanel implements ActionListener, KeyListener, M
         clearButton.setPreferredSize(new Dimension(100, 60));
         clearButton.setFont(Utils.BIG_BOLD_FONT);
         clearButton.setFocusable(false);
+        clearButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         clearButton.addMouseListener(this);
         managePanel.add(clearButton);
         this.add(managePanel);
@@ -262,10 +261,7 @@ public class AccountTab extends JPanel implements ActionListener, KeyListener, M
         } else if (e.getSource() == removeButton) {
             removeButton();
         } else if (e.getSource() == clearButton) {
-            nameField.setText("");
-            idField.setText("");
-            mailField.setText("");
-            accountTable.clearSelection();
+            clearButton();
         }
     }
 
@@ -352,30 +348,165 @@ public class AccountTab extends JPanel implements ActionListener, KeyListener, M
             String mail = mailField.getText();
             String gender = (String) genderBox.getSelectedItem();
 
-            accountTableModel.setValueAt(id, selectedRow, 0);
-            accountTableModel.setValueAt(name, selectedRow, 1);
-            accountTableModel.setValueAt(mail, selectedRow, 2);
-            accountTableModel.setValueAt(gender, selectedRow, 4);
+            boolean idExists = false;
+            boolean nameExists = false;
+
+            // Check if the id or name already exists
+            for (int row = 0; row < accountTableModel.getRowCount(); row++) {
+                if (row != selectedRow) {
+                    String existingId = accountTableModel.getValueAt(row, 0).toString();
+                    String existingName = accountTableModel.getValueAt(row, 1).toString();
+
+                    if (existingId.equals(id)) {
+                        idExists = true;
+                    } else if (existingName.equals(name)) {
+                        nameExists = true;
+                    }
+                }
+            }
+
+            if (idExists) {
+                JOptionPane.showMessageDialog(
+                        this,
+                        "ID already exists.",
+                        "Warning",
+                        JOptionPane.WARNING_MESSAGE
+                );
+            } else if (nameExists) {
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Name already exists.",
+                        "Warning",
+                        JOptionPane.WARNING_MESSAGE
+                );
+            } else {
+                accountTableModel.setValueAt(id, selectedRow, 0);
+                accountTableModel.setValueAt(name, selectedRow, 1);
+                accountTableModel.setValueAt(mail, selectedRow, 2);
+                accountTableModel.setValueAt(gender, selectedRow, 4);
+
+                try {
+                    BufferedReader reader = new BufferedReader(new FileReader("src/data/student.txt"));
+                    String line;
+                    List<String> lines = new ArrayList<>();
+                    while ((line = reader.readLine()) != null) {
+                        String[] rawData = line.split(",");
+                        if (rawData[0].equals(oldId) && rawData[1].equals(oldName)) {
+                            rawData[0] = id;
+                            rawData[1] = name;
+                            rawData[2] = mail;
+                            rawData[4] = gender;
+                            String updatedLine = String.join(",", rawData);
+                            lines.add(updatedLine);
+                        } else {
+                            lines.add(line);
+                        }
+                    }
+                    reader.close();
+
+                    BufferedWriter writer = new BufferedWriter(new FileWriter("src/data/student.txt"));
+                    for (int i = 0; i < lines.size(); i++) {
+                        writer.write(lines.get(i));
+                        writer.newLine();
+                    }
+                    writer.flush();
+                    writer.close();
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Account updated successfully.",
+                        "Success",
+                        JOptionPane.INFORMATION_MESSAGE
+                );
+            }
+        } else {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Please select an account to update.",
+                    "Warning",
+                    JOptionPane.WARNING_MESSAGE
+            );
+        }
+    }
+
+    public void removeButton() {
+        int selectedRow = accountTable.getSelectedRow();
+
+        if (selectedRow >= 0) {
+            String id = accountTableModel.getValueAt(selectedRow, 0).toString();
+            String name = accountTableModel.getValueAt(selectedRow, 1).toString();
+
+            File returnfile = new File("src/data/library/" + name + "_return.txt");
+            try {
+                returnfile.createNewFile();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
 
             try {
+                List<String> lines = new ArrayList<>();
                 BufferedReader reader = new BufferedReader(new FileReader("src/data/student.txt"));
                 String line;
-                List<String> lines = new ArrayList<>();
+
+                // Run through student.txt and remove the student
                 while ((line = reader.readLine()) != null) {
                     String[] rawData = line.split(",");
-                    if (rawData[0].equals(oldId) && rawData[1].equals(oldName)) {
-                        rawData[0] = id;
-                        rawData[1] = name;
-                        rawData[2] = mail;
-                        rawData[4] = gender;
-                        String updatedLine = String.join(",", rawData);
-                        lines.add(updatedLine);
+                    if (rawData[0].equals(id) && rawData[1].equals(name)) {
+                        if (returnfile.exists()) {
+
+                            // Run through the return file and update the book's issued count
+                            List<String> returnData = new ArrayList<>();
+                            BufferedReader returnReader = new BufferedReader(new FileReader(returnfile));
+                            String returnLine;
+                            while ((returnLine = returnReader.readLine()) != null) {
+                                returnData.add(returnLine);
+                            }
+                            returnReader.close();
+
+                            // Update the book's issued count
+                            for (int i = 0; i < returnData.size(); i++) {
+                                String[] returnRawData = returnData.get(i).split(",");
+                                String returnBookId = returnRawData[0];
+                                String returnBookName = returnRawData[1];
+
+                                BufferedReader bookReader = new BufferedReader(new FileReader("src/data/library/books.txt"));
+                                String bookLine;
+                                List<String> bookData = new ArrayList<>();
+                                while ((bookLine = bookReader.readLine()) != null) {
+                                    bookData.add(bookLine);
+                                }
+                                bookReader.close();
+
+                                BufferedWriter writer = new BufferedWriter(new FileWriter("src/data/library/books.txt"));
+                                for (int j = 0; j < bookData.size(); j++) {
+                                    String[] bookRawData = bookData.get(j).split(",");
+                                    String bookId = bookRawData[0];
+                                    String bookName = bookRawData[1];
+                                    String bookIssued = bookRawData[5];
+                                    if (bookId.equals(returnBookId) && bookName.equals(returnBookName)) {
+                                        int issuedCount = Integer.parseInt(bookIssued) + 1;
+                                        bookRawData[5] = String.valueOf(issuedCount);
+                                        String updatedLine = String.join(",", bookRawData);
+                                        writer.write(updatedLine);
+                                    } else {
+                                        String otherLine = String.join(",", bookRawData);
+                                        writer.write(otherLine);
+                                    }
+                                    writer.newLine();
+                                }
+                                writer.flush();
+                                writer.close();
+                            }
+                        }
                     } else {
                         lines.add(line);
                     }
                 }
                 reader.close();
-
+                // Write the updated student.txt
                 BufferedWriter writer = new BufferedWriter(new FileWriter("src/data/student.txt"));
                 for (int i = 0; i < lines.size(); i++) {
                     writer.write(lines.get(i));
@@ -383,103 +514,34 @@ public class AccountTab extends JPanel implements ActionListener, KeyListener, M
                 }
                 writer.flush();
                 writer.close();
+                FileWriter fileWriter = new FileWriter("src/data/library/" + name + "_return.txt");
+                fileWriter.write("");
+                fileWriter.flush();
+                fileWriter.close();
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
+            // Remove the row from the table
+            accountTableModel.removeRow(selectedRow);
+            bookTab.updateBookTable();
 
+            clearButton();
+        } else {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Please select an account to remove.",
+                    "Warning",
+                    JOptionPane.WARNING_MESSAGE
+            );
         }
     }
 
-    public void removeButton() {
-        int selectedRow = accountTable.getSelectedRow();
-        String id = accountTableModel.getValueAt(selectedRow, 0).toString();
-        String name = accountTableModel.getValueAt(selectedRow, 1).toString();
-
-        File returnfile = new File("src/data/library/" + name + "_return.txt");
-        try {
-            returnfile.createNewFile();
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
-        }
-
-        try {
-            List<String> lines = new ArrayList<>();
-            BufferedReader reader = new BufferedReader(new FileReader("src/data/student.txt"));
-            String line;
-
-            // Run through student.txt and remove the student
-            while ((line = reader.readLine()) != null) {
-                String[] rawData = line.split(",");
-                if (rawData[0].equals(id) && rawData[1].equals(name)) {
-                    if (returnfile.exists()) {
-
-                        // Run through the return file and update the book's issued count
-                        List<String> returnData = new ArrayList<>();
-                        BufferedReader returnReader = new BufferedReader(new FileReader(returnfile));
-                        String returnLine;
-                        while ((returnLine = returnReader.readLine()) != null) {
-                            returnData.add(returnLine);
-                        }
-                        returnReader.close();
-
-                        // Update the book's issued count
-                        for (int i = 0; i < returnData.size(); i++) {
-                            String[] returnRawData = returnData.get(i).split(",");
-                            String returnBookId = returnRawData[0];
-                            String returnBookName = returnRawData[1];
-
-                            BufferedReader bookReader = new BufferedReader(new FileReader("src/data/library/books.txt"));
-                            String bookLine;
-                            List<String> bookData = new ArrayList<>();
-                            while ((bookLine = bookReader.readLine()) != null) {
-                                bookData.add(bookLine);
-                            }
-                            bookReader.close();
-
-                            BufferedWriter writer = new BufferedWriter(new FileWriter("src/data/library/books.txt"));
-                            for (int j = 0; j < bookData.size(); j++) {
-                                String[] bookRawData = bookData.get(j).split(",");
-                                String bookId = bookRawData[0];
-                                String bookName = bookRawData[1];
-                                String bookIssued = bookRawData[5];
-                                if (bookId.equals(returnBookId) && bookName.equals(returnBookName)) {
-                                    int issuedCount = Integer.parseInt(bookIssued) + 1;
-                                    bookRawData[5] = String.valueOf(issuedCount);
-                                    String updatedLine = String.join(",", bookRawData);
-                                    writer.write(updatedLine);
-                                } else {
-                                    String otherLine = String.join(",", bookRawData);
-                                    writer.write(otherLine);
-                                }
-                                writer.newLine();
-                            }
-                            writer.flush();
-                            writer.close();
-                        }
-                    }
-                } else {
-                    lines.add(line);
-                }
-            }
-            reader.close();
-            // Write the updated student.txt
-            BufferedWriter writer = new BufferedWriter(new FileWriter("src/data/student.txt"));
-            for (int i = 0; i < lines.size(); i++) {
-                writer.write(lines.get(i));
-                writer.newLine();
-            }
-            writer.flush();
-            writer.close();
-            FileWriter fileWriter = new FileWriter("src/data/library/" + name + "_return.txt");
-            fileWriter.write("");
-            fileWriter.flush();
-            fileWriter.close();
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
-        }
-        // Remove the row from the table
-        accountTableModel.removeRow(selectedRow);
-        bookTab.updateBookTable();
+    public void clearButton() {
+        nameField.setText("");
+        idField.setText("");
+        mailField.setText("");
+        genderBox.setSelectedIndex(0);
+        accountTable.clearSelection();
     }
 
     /*

@@ -3,26 +3,19 @@ package Frame;
 import Extra.*;
 
 import javax.swing.*;
+import javax.swing.border.CompoundBorder;
 import javax.swing.plaf.basic.BasicButtonUI;
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Random;
 
-public class SignupFrame extends JFrame implements MouseListener {
-    private final JPanel introPanel;
-    private final JLabel introLabel;
-    private final JPanel radioPanel;
-    private final JRadioButton librarianButton;
-    private final JRadioButton studentButton;
+public class SignupFrame extends JFrame implements MouseListener, KeyListener {
     private final ButtonGroup loginGroup;
-    private final JPanel leftPanel;
-    private final JPanel naviPanel;
     private final JButton backButton;
-    private final JPanel rightPanel;
     private final JTextField nameField;
     private final JTextField mailField;
     private final JTextField idField;
@@ -31,7 +24,6 @@ public class SignupFrame extends JFrame implements MouseListener {
     private final JPasswordField confirmPassField;
     private final JTextField captchaField;
     private final int captchaValue;
-    private final BufferedImage resizedImage;
     private LoginFrame loginFrame;
     private final JButton signupButton;
     private final JButton loginButton;
@@ -46,16 +38,13 @@ public class SignupFrame extends JFrame implements MouseListener {
         this.setResizable(false);
         this.setLayout(new BorderLayout());
 
-        UIManager.put("OptionPane.messageFont", Utils.NORMAL_FONT);
-        UIManager.put("OptionPane.buttonFont", Utils.NORMAL_FONT);
-
         // Start of Left Panel
-        leftPanel = new JPanel();
+        JPanel leftPanel = new JPanel();
         leftPanel.setLayout(new BorderLayout());
         leftPanel.setPreferredSize(new Dimension(660, 800));
         leftPanel.setBackground(Color.WHITE);
 
-        naviPanel = new JPanel();
+        JPanel naviPanel = new JPanel();
         naviPanel.setLayout(new BorderLayout());
         naviPanel.setPreferredSize(new Dimension(60, 60));
         naviPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 0, 0));
@@ -72,53 +61,52 @@ public class SignupFrame extends JFrame implements MouseListener {
         naviPanel.add(backButton, BorderLayout.WEST);
         leftPanel.add(naviPanel, BorderLayout.NORTH);
 
-        try {
-            resizedImage = Utils.resizeImage("src/images/signup.jpg", 600, 600);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        ImageIcon image = new ImageIcon(resizedImage);
+        ImageIcon image = new ImageIcon("src/images/signup.png");
         JLabel imageLabel = new JLabel(image);
         imageLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 70, 0));
         leftPanel.add(imageLabel, BorderLayout.CENTER);
         // End of Left Panel
 
         // Start of Right Panel
-        rightPanel = new JPanel();
+        JPanel rightPanel = new JPanel();
         rightPanel.setLayout(new FlowLayout());
         rightPanel.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 0));
         rightPanel.setPreferredSize(new Dimension(600, 800));
         rightPanel.setBackground(Utils.BACKGROUND_COLOR);
 
-        introPanel = new JPanel();
+        JPanel introPanel = new JPanel();
         introPanel.setPreferredSize(new Dimension(600, 130));
         introPanel.setBorder(BorderFactory.createEmptyBorder(60, 0, 20, 0));
         introPanel.setBackground(Utils.BACKGROUND_COLOR);
 
-        introLabel = new JLabel("Create Account");
+        JLabel introLabel = new JLabel("Create Account");
         introLabel.setFont(Utils.INTRO_FONT);
         introPanel.add(introLabel);
         rightPanel.add(introPanel);
 
-        radioPanel = new JPanel();
+        JPanel radioPanel = new JPanel();
         radioPanel.setLayout(new BorderLayout());
         radioPanel.setPreferredSize(new Dimension(200, 30));
         radioPanel.setBackground(Utils.BACKGROUND_COLOR);
 
         ImageIcon checkedIcon = new ImageIcon("src/images/radio_checked.png");
         ImageIcon unCheckedIcon = new ImageIcon("src/images/radio_unchecked.png");
-        librarianButton = new JRadioButton("Librarian", unCheckedIcon);
+
+        JRadioButton librarianButton = new JRadioButton("Librarian", unCheckedIcon);
         librarianButton.setActionCommand("Librarian");
         librarianButton.setSelectedIcon(checkedIcon);
         librarianButton.setFont(Utils.SMALL_BOLD_FONT);
         librarianButton.setBackground(Utils.BACKGROUND_COLOR);
         librarianButton.setFocusable(false);
-        studentButton = new JRadioButton("Student", unCheckedIcon);
+        librarianButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
+        JRadioButton studentButton = new JRadioButton("Student", unCheckedIcon);
         studentButton.setActionCommand("Student");
         studentButton.setSelectedIcon(checkedIcon);
         studentButton.setFont(Utils.SMALL_BOLD_FONT);
         studentButton.setBackground(Utils.BACKGROUND_COLOR);
         studentButton.setFocusable(false);
+        studentButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
         loginGroup = new ButtonGroup();
         loginGroup.add(librarianButton);
@@ -133,13 +121,16 @@ public class SignupFrame extends JFrame implements MouseListener {
         nameLabel.setPreferredSize(new Dimension(420, 30));
         rightPanel.add(nameLabel);
 
+        CompoundBorder textFieldBorder = BorderFactory.createCompoundBorder(
+                BorderFactory.createMatteBorder(1, 1, 1, 1, Utils.LIGHT_BLUE),
+                BorderFactory.createEmptyBorder(0, 5, 0, 5)
+        );
+
         nameField = new JTextField();
         nameField.setFont(Utils.BIG_FONT);
         nameField.setPreferredSize(new Dimension(420, 50));
-        nameField.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createMatteBorder(0, 0, 1, 0, Color.BLACK),
-                BorderFactory.createEmptyBorder(0, 5, 0, 0)
-        ));
+        nameField.setBorder(textFieldBorder);
+        nameField.addKeyListener(this);
         rightPanel.add(nameField);
 
         JLabel mailLabel = new JLabel("Email Address");
@@ -150,10 +141,8 @@ public class SignupFrame extends JFrame implements MouseListener {
         mailField = new JTextField();
         mailField.setFont(Utils.BIG_FONT);
         mailField.setPreferredSize(new Dimension(420, 50));
-        mailField.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createMatteBorder(0, 0, 1, 0, Color.BLACK),
-                BorderFactory.createEmptyBorder(0, 5, 0, 0)
-        ));
+        mailField.setBorder(textFieldBorder);
+        mailField.addKeyListener(this);
         rightPanel.add(mailField);
 
         JPanel optionalPanel = new JPanel();
@@ -171,15 +160,14 @@ public class SignupFrame extends JFrame implements MouseListener {
 
         idField = new JTextField();
         idField.setFont(Utils.NORMAL_FONT);
-        idField.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createMatteBorder(0, 0, 1, 0, Color.BLACK),
-                BorderFactory.createEmptyBorder(0, 5, 0, 0)
-        ));
+        idField.setBorder(textFieldBorder);
+        idField.addKeyListener(this);
         optionalPanel.add(idField);
 
         String[] gender = {"Male", "Female", "Other"};
         genderBox = new JComboBox<>(gender);
         genderBox.setFont(Utils.NORMAL_FONT);
+        genderBox.setFocusable(false);
         optionalPanel.add(genderBox);
 
         rightPanel.add(optionalPanel);
@@ -199,18 +187,14 @@ public class SignupFrame extends JFrame implements MouseListener {
 
         passField = new JPasswordField();
         passField.setFont(Utils.NORMAL_FONT);
-        passField.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createMatteBorder(0, 0, 1, 0, Color.BLACK),
-                BorderFactory.createEmptyBorder(0, 5, 0, 0)
-        ));
+        passField.setBorder(textFieldBorder);
+        passField.addKeyListener(this);
         passwordPanel.add(passField);
 
         confirmPassField = new JPasswordField();
         confirmPassField.setFont(Utils.NORMAL_FONT);
-        confirmPassField.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createMatteBorder(0, 0, 1, 0, Color.BLACK),
-                BorderFactory.createEmptyBorder(0, 5, 0, 0)
-        ));
+        confirmPassField.setBorder(textFieldBorder);
+        confirmPassField.addKeyListener(this);
         passwordPanel.add(confirmPassField);
 
         rightPanel.add(passwordPanel);
@@ -241,10 +225,8 @@ public class SignupFrame extends JFrame implements MouseListener {
         captchaField = new JTextField();
         captchaField.setPreferredSize(new Dimension(335, 40));
         captchaField.setFont(Utils.NORMAL_FONT);
-        captchaField.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createMatteBorder(0, 0, 1, 0, Color.BLACK),
-                BorderFactory.createEmptyBorder(0, 5, 0, 0)
-        ));
+        captchaField.setBorder(textFieldBorder);
+        captchaField.addKeyListener(this);
         captchaPanel.add(captchaField);
 
         rightPanel.add(captchaPanel);
@@ -292,92 +274,11 @@ public class SignupFrame extends JFrame implements MouseListener {
     @Override
     public void mouseClicked(MouseEvent e) {
         if (e.getSource() == backButton) {
-            if (loginFrame == null) {
-                loginFrame = new LoginFrame();
-            }
-            this.setVisible(false);
-            loginFrame.setVisible(true);
+            backAction();
         } else if (e.getSource() == signupButton) {
-            if (loginGroup.getSelection() == null) {
-                JOptionPane.showMessageDialog(
-                        this,
-                        "Please, select a whether you are a 'Librarian' or a 'Student'.",
-                        "SignUp Warning",
-                        JOptionPane.WARNING_MESSAGE
-                );
-            } else if (nameField.getText().isEmpty() ||
-                    mailField.getText().isEmpty() ||
-                    idField.getText().isEmpty() ||
-                    passField.getPassword().length == 0 ||
-                    passField.getPassword().length == 0
-            ) {
-                JOptionPane.showMessageDialog(
-                        this,
-                        "Please, Fill up the blank areas.",
-                        "Incomplete Warning",
-                        JOptionPane.WARNING_MESSAGE
-                );
-            } else if (!Arrays.equals(passField.getPassword(), confirmPassField.getPassword())) {
-                JOptionPane.showMessageDialog(
-                        this,
-                        "Passwords do not match. Please, try again.",
-                        "Password Error",
-                        JOptionPane.ERROR_MESSAGE
-                );
-                passField.setText("");
-                confirmPassField.setText("");
-            } else if (captchaField.getText().isEmpty()) {
-                JOptionPane.showMessageDialog(
-                        this,
-                        "Please, complete the captcha.",
-                        "Captcha Error",
-                        JOptionPane.ERROR_MESSAGE
-                );
-            } else if (!captchaField.getText().equals(String.valueOf(captchaValue))) {
-                JOptionPane.showMessageDialog(
-                        this,
-                        "Incorrect captcha value. Please, try again.",
-                        "Captcha Incorrect",
-                        JOptionPane.ERROR_MESSAGE
-                );
-            } else if (captchaField.getText().equals(String.valueOf(captchaValue))) {
-                String userType = loginGroup.getSelection().getActionCommand();
-                String id = idField.getText();
-                String name = nameField.getText();
-                String mail = mailField.getText();
-                String password = String.valueOf(passField.getPassword());
-                String gender = (String) genderBox.getSelectedItem();
-
-                Account account = new Account(this);
-                if (!account.accountExists(userType, name, id)) {
-                    account.addAccount(userType, id, name, mail, password, gender);
-                    JOptionPane.showMessageDialog(
-                            this,
-                            " Account creation successful. Now you can try logging in.",
-                            "Success",
-                            JOptionPane.INFORMATION_MESSAGE
-                    );
-
-                    if (loginFrame == null) {
-                        loginFrame = new LoginFrame();
-                    }
-                    loginFrame.setVisible(true);
-                    this.setVisible(false);
-                } else {
-                    JOptionPane.showMessageDialog(
-                            this,
-                            "Account with same Username or ID already exists.",
-                            "Warning",
-                            JOptionPane.WARNING_MESSAGE
-                    );
-                }
-            }
+            signupAction();
         } else if (e.getSource() == loginButton) {
-            if (loginFrame == null) {
-                loginFrame = new LoginFrame();
-            }
-            this.setVisible(false);
-            loginFrame.setVisible(true);
+            backAction();
         }
     }
 
@@ -407,5 +308,110 @@ public class SignupFrame extends JFrame implements MouseListener {
         } else if (e.getSource() == loginButton) {
             loginButton.setForeground(Color.BLACK);
         }
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+        if (e.getKeyChar() == KeyEvent.VK_ENTER) {
+            signupButton.doClick();
+            signupAction();
+        } else if (e.getKeyChar() == KeyEvent.VK_ESCAPE) {
+            backButton.doClick();
+            backAction();
+        }
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+
+    }
+
+    public void signupAction() {
+        if (loginGroup.getSelection() == null) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Please, select a whether you are a 'Librarian' or a 'Student'.",
+                    "SignUp Warning",
+                    JOptionPane.WARNING_MESSAGE
+            );
+        } else if (nameField.getText().isEmpty() ||
+                mailField.getText().isEmpty() ||
+                idField.getText().isEmpty() ||
+                passField.getPassword().length == 0 ||
+                passField.getPassword().length == 0) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Please, Fill up the blank areas.",
+                    "Incomplete Warning",
+                    JOptionPane.WARNING_MESSAGE
+            );
+        } else if (!Arrays.equals(passField.getPassword(), confirmPassField.getPassword())) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Passwords do not match. Please, try again.",
+                    "Password Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            passField.setText("");
+            confirmPassField.setText("");
+        } else if (captchaField.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Please, complete the captcha.",
+                    "Captcha Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        } else if (!captchaField.getText().equals(String.valueOf(captchaValue))) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Incorrect captcha value. Please, try again.",
+                    "Captcha Incorrect",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        } else if (captchaField.getText().equals(String.valueOf(captchaValue))) {
+            String userType = loginGroup.getSelection().getActionCommand();
+            String id = idField.getText();
+            String name = nameField.getText();
+            String mail = mailField.getText();
+            String password = String.valueOf(passField.getPassword());
+            String gender = (String) genderBox.getSelectedItem();
+
+            Account account = new Account(this);
+            if (!account.accountExists(userType, name, id)) {
+                account.addAccount(userType, id, name, mail, password, gender);
+                JOptionPane.showMessageDialog(
+                        this,
+                        " Account creation successful. Now you can try logging in.",
+                        "Success",
+                        JOptionPane.INFORMATION_MESSAGE
+                );
+
+                if (loginFrame == null) {
+                    loginFrame = new LoginFrame();
+                }
+                loginFrame.setVisible(true);
+                this.setVisible(false);
+            } else {
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Account with same Username or ID already exists.",
+                        "Warning",
+                        JOptionPane.WARNING_MESSAGE
+                );
+            }
+        }
+    }
+
+    public void backAction() {
+        if (loginFrame == null) {
+            loginFrame = new LoginFrame();
+        }
+        this.setVisible(false);
+        loginFrame.setVisible(true);
     }
 }
